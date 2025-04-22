@@ -1,0 +1,25 @@
+import { tmdbApi } from '../api/tmdb';
+import { MovieListResponse } from '../types/types';
+import { MovieListType } from '../types/types';
+
+export const fetchMoviesByType = async (
+  type: MovieListType, 
+  page: number = 1
+): Promise<MovieListResponse> => {
+  try {
+    switch (type) {
+      case 'popular':
+        return tmdbApi.getPopularMovies(page);
+      case 'top_rated':
+        return tmdbApi.getTopRatedMovies(page);
+      case 'upcoming':
+        return tmdbApi.getUpcomingMovies(page);
+      default:
+        const _exhaustiveCheck: never = type;
+        return _exhaustiveCheck;
+    }
+  } catch (error) {
+    console.error(`Error fetching ${type} movies:`, error);
+    throw error;
+  }
+};
