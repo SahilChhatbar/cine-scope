@@ -1,6 +1,7 @@
 import { AppShell } from "@mantine/core";
 import { Outlet } from "react-router-dom";
 import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
 
 const Appshell = () => {
   return (
@@ -17,9 +18,12 @@ const Appshell = () => {
       <AppShell.Header>
         <Header />
       </AppShell.Header>
-      <AppShell.Main className="bg-slate-900 ">
+      <AppShell.Main className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900">
         <Outlet />
       </AppShell.Main>
+      <AppShell.Footer bd="none" pos="static">
+        <Footer />
+      </AppShell.Footer>
     </AppShell>
   );
 };

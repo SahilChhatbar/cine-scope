@@ -1,7 +1,11 @@
+import MovieList from "../../components/common/MovieList"
+import PopularMovieSlides from "./components/PopularMovieSlides"
+
 const Home = () => {
   return (
     <div>
-      home
+      <PopularMovieSlides/>
+      <MovieList type="popular" />
       </div>
   )
 }

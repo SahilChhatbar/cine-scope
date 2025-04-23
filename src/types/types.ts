@@ -11,37 +11,36 @@ export interface NavLinkItem {
 export interface HeaderProps {
   logoColor?: MantineColor;
 }
-
+export interface SortOption {
+  id: string;
+  label: string;
+  compareFn: (a: Movie, b: Movie) => number;
+}
 
 export interface MovieListProps {
     type: 'popular' | 'top_rated' | 'upcoming';
   }
-
+  
   export interface Movie {
     imdbID: string;  
     Title: string;   
     Year: string;    
-    Poster: string;  
+    Poster: string;
+    Backdrop: string; 
     Type: string;
     Plot?: string;    
     imdbRating?: string;
-  }
+}
   
   export interface MovieDetail extends Movie {
     Rated: string;
     Released: string;
     Runtime: string;
     Genre: string;
-    Director: string;
-    Writer: string;
-    Actors: string;
     Plot: string;
-    Language: string;
-    Country: string;
     Ratings: Array<{ Source: string; Value: string }>;
     imdbRating: string;
     imdbVotes: string;
-    BoxOffice: string;
     Production: string;
     Website: string;
     Videos?: {

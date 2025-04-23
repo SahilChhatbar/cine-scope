@@ -62,7 +62,7 @@ const MovieDetail = () => {
     return <Text content="center">Failed to load movie details.</Text>;
 
   return (
-    <Stack className="bg-slate-900 text-white min-h-screen">
+    <Stack className="bg-gradient-to-r from-slate-900 text-white min-h-screen py-3">
       <div className="relative w-full">
         {trailerUrl ? (
           <div className="w-full aspect-video">
@@ -72,14 +72,16 @@ const MovieDetail = () => {
               height="100%"
               playing={false}
               controls={true}
-              light={data?.Poster !== "N/A" ? data.Poster : "/placeholder.jpg"}
+              light={data?.Backdrop !== "N/A" ? data?.Backdrop : "/backdrop.jpg"}
+              
             />
           </div>
         ) : (
           <Image
-            src={data.Poster !== "N/A" ? data.Poster : "/placeholder.jpg"}
-            alt={data.Title}
-            className="w-full h-[50vh] object-cover rounded-md"
+            src={data?.Backdrop !== "N/A" ? data?.Backdrop : "/backdrop.jpg"}
+            alt={data?.Title}
+            className="w-full h-[50vh] object-cover"
+            radius={10}
           />
         )}
         <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-6">
@@ -88,7 +90,8 @@ const MovieDetail = () => {
               <Image
                 src={data?.Poster !== "N/A" ? data?.Poster : "/placeholder.jpg"}
                 alt={data?.Title}
-                className="w-64 h-96 object-cover rounded-md shadow-lg hidden md:block"
+                className="w-64 h-96 object-cover shadow-lg hidden md:block"
+                radius={10}
               />
               <Stack className="flex-1 pt-50">
                 <Title order={1} className="text-4xl  font-bold ">
@@ -171,20 +174,19 @@ const MovieDetail = () => {
             </Anchor>
           </Flex>
         </Stack>
-        {data.Production && data.Production !== "N/A" && (
+        {data?.Production && data?.Production !== "N/A" && (
           <Stack>
             <Title order={2} className="text-2xl font-bold">
               Production companies
             </Title>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {data.Production.split(", ").map((company: string) => (
-                <List key={company} className="p-4 rounded-md">
-                  <Text content="center" className="text-gray-300">
-                    {company}
-                  </Text>
+            <Flex gap="md">
+              {data?.Production.split(", ").map((company: string) => (
+                <List key={company} className=" rounded-md">
+                  <Badge p="md" bg="indigo.9">
+                  {company}</Badge>
                 </List>
               ))}
-            </div>
+            </Flex>
           </Stack>
         )}
       </Stack>

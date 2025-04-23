@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { MantineProvider } from "@mantine/core";
 import { queryClient } from "./config/queryClient";
 import "@mantine/core/styles.css";
+import '@mantine/carousel/styles.css';
 
 const App = () => {
   return (

@@ -16,6 +16,7 @@
     "@tailwindcss/vite": "^4.1.4",
     "@tanstack/react-query": "^5.74.4",
     "axios": "^1.8.4",
+    "embla-carousel-autoplay": "^7.1.0",
     "embla-carousel-react": "^7.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
