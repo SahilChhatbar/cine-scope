@@ -27,18 +27,14 @@ export interface MovieListProps {
     Year: string;    
     Poster: string;
     Backdrop: string; 
-    Type: string;
     Plot?: string;    
     imdbRating?: string;
 }
   
-  export interface MovieDetail extends Movie {
-    Rated: string;
-    Released: string;
+  export interface MovieDetails extends Movie {
     Runtime: string;
     Genre: string;
     Plot: string;
-    Ratings: Array<{ Source: string; Value: string }>;
     imdbRating: string;
     imdbVotes: string;
     Production: string;

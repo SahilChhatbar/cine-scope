@@ -6,7 +6,6 @@ import Footer from "../components/common/Footer";
 const Appshell = () => {
   return (
     <AppShell
-      layout="alt"
       h="97%"
       header={{
         height: {
@@ -18,8 +17,10 @@ const Appshell = () => {
       <AppShell.Header>
         <Header />
       </AppShell.Header>
-      <AppShell.Main className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900">
-        <Outlet />
+      <AppShell.Main className="bg-slate-900">
+        <div className="min-h-full w-full md:bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 rounded-3xl md:p-8">
+          <Outlet />
+        </div>
       </AppShell.Main>
       <AppShell.Footer bd="none" pos="static">
         <Footer />

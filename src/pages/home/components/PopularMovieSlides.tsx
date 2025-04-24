@@ -3,24 +3,30 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Autoplay from "embla-carousel-autoplay";
 import { Carousel } from "@mantine/carousel";
-import { Box, Text, Stack, Center, Title, Loader } from "@mantine/core";
+import { Box, Text, Stack, Center, Title } from "@mantine/core";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { fetchMoviesByType } from "../../../utils/fetchMovies";
 import { FaStar } from "react-icons/fa";
 
 const PopularMovieSlides = () => {
-  const autoplay = useRef(Autoplay({ delay: 2000 }));
+  const autoplay = useRef(Autoplay({ delay: 4500 }));
 
   const { data, isLoading } = useQuery({
     queryKey: ["movies", "popular"],
     queryFn: () => fetchMoviesByType("popular", 1),
     select: (data) => data.movies.slice(0, 8),
   });
-
+  
   if (isLoading) {
     return (
-      <Box className="h-96 w-full flex items-center justify-center">
-        <Loader />
-      </Box>
+      <Center>
+        <div className="w-full max-w-280">
+          <SkeletonTheme baseColor="gray" highlightColor="#444">
+            <Skeleton height={550} duration={2} />
+          </SkeletonTheme>
+        </div>
+      </Center>
     );
   }
 
@@ -61,7 +67,7 @@ const PopularMovieSlides = () => {
                         </span>
                       )}
                     </Box>
-                    {movie.Plot && (
+                    {movie?.Plot && (
                       <Text className="text-lg opacity-80 line-clamp-3">
                         {movie?.Plot}
                       </Text>

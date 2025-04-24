@@ -33,8 +33,8 @@ const Header: React.FC<HeaderProps> = () => {
       to={link.link}
       className={({ isActive }: { isActive: boolean }) =>
         isActive
-          ? "block leading-none py-2 px-3 transition-all duration-400 text-white hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
-          : "block leading-none py-2 px-3 transition-all duration-400 text-gray-400 hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
+          ? "block leading-none py-2 px-3 transition-all duration-250 text-white hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
+          : "block leading-none py-2 px-3 transition-all duration-250 text-gray-500 hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
       }
     >
       {link.label}
@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = () => {
   };
 
   return (
-    <header className="h-fit bg-gradient-to-r p-2 from-slate-900 via-indigo-900 to-slate-900">
+    <header className="h-fit p-2  bg-slate-900">
       <Flex justify="space-around" align="center" h={60}>
         <Group>
           <Burger
@@ -59,8 +59,8 @@ const Header: React.FC<HeaderProps> = () => {
             className="text-gray-200"
           />
           <NavLink to="/" className="flex gap-2 items-center">
-            <BiCameraMovie className={`md:h-9 md:w-9 text-white`} />
-            <span className="font-mono md:text-3xl font-bold text-white">
+            <BiCameraMovie className="md:h-9 md:w-9 h-7 w-7 text-white" />
+            <span className="font-mono md:text-3xl text-2xl font-bold text-white">
               CineScope
             </span>
           </NavLink>
@@ -75,16 +75,18 @@ const Header: React.FC<HeaderProps> = () => {
               placeholder="Search movies..."
               value={searchValue}
               onChange={setSearchValue}
-              data={searchResults?.movies.map((movie: Movie) => ({
-                value: movie?.imdbID,
-                label: `${movie?.Title} (${movie?.Year})`,
-              })) || []}
+              data={
+                searchResults?.movies.map((movie: Movie) => ({
+                  value: movie?.imdbID,
+                  label: `${movie?.Title} (${movie?.Year})`,
+                })) || []
+              }
               onOptionSubmit={handleSearchSelect}
               styles={{
                 input: {
-                  backgroundColor: "#1D0555",
+                  backgroundColor: "#0f172a",
                   color: "white",
-                  border: "1px solid #1B005B",
+                  border: "1px solid #5a5a55",
                   borderRadius: "0.5rem",
                 },
               }}

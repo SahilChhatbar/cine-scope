@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Movie, MovieDetail, MovieListResponse } from '../types/types';
+import { Movie, MovieDetails, MovieListResponse } from '../types/types';
 
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
@@ -13,14 +13,13 @@ const transformMovieData = (tmdbMovie: any): Movie => {
     Year: tmdbMovie.release_date?.substring(0, 4) || '',
     Poster: tmdbMovie.poster_path ? `${TMDB_IMAGE_BASE_URL}${tmdbMovie.poster_path}` : '',
     Backdrop: tmdbMovie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${tmdbMovie.backdrop_path}` : '',
-    Type: 'movie',
     Plot: tmdbMovie.overview || '',
     imdbRating: tmdbMovie.vote_average ? tmdbMovie.vote_average.toFixed(1) : 'N/A'
   };
 };
 
 export const tmdbApi = {
-  getMovieDetails: async (movieId: string): Promise<MovieDetail> => {
+  getMovieDetails: async (movieId: string): Promise<MovieDetails> => {
     try {
       const response = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}`, {
         params: {
@@ -35,20 +34,15 @@ export const tmdbApi = {
         Year: response.data.release_date.substring(0, 4),
         Poster: response.data.poster_path ? `${TMDB_IMAGE_BASE_URL}${response.data.poster_path}` : '',
         Backdrop: response.data.backdrop_path ? `${TMDB_IMAGE_BASE_URL}${response.data.backdrop_path}` : '',
-        Type: 'movie',
-        Rated: response.data.adult ? 'R' : 'PG-13',
-        Released: response.data.release_date,
         Runtime: `${response.data.runtime} min`,
         Genre: response.data.genres.map((g: any) => g.name).join(', '),
         Plot: response.data.overview,
-        Ratings: [
-          { Source: 'TMDB', Value: `${response.data.vote_average}/10` }
-        ],
         imdbRating: (response.data.vote_average / 2).toString(),
         imdbVotes: response.data.vote_count.toString(),
         Production: response.data.production_companies.map((comp: any) => comp.name).join(', '),
         Website: response.data.homepage || 'N/A',
-        Videos: response.data.videos
+        Videos: response.data.videos,
+        Review: response.data.reviews,
       };
     } catch (error) {
       console.error('Error fetching movie details:', error);
