@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @layer base {
-  @custom-media --xm (min-width: 1024px) and (max-width: 1285px);
+  @custom-media --xm (min-width: 1024px) and (max-width: 1286px);
   @custom-media --psm (min-width: 764px) and (max-width: 945px);
 }
 
@@ -24,3 +24,4 @@
     }
   }
 }
+

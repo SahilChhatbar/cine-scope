@@ -39,6 +39,7 @@ export interface MovieListProps {
     imdbVotes: string;
     Production: string;
     Website: string;
+    Review:string;
     Videos?: {
       results: Array<{
         id: string;
