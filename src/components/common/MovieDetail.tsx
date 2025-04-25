@@ -62,8 +62,8 @@ const MovieDetail = () => {
     return <Text content="center">Failed to load movie details.</Text>;
 
   return (
-    <Stack className="bg-slate-900 text-white min-h-screen pb-4">
-      <div className="relative w-full md:py-0 py-15">
+    <Stack className="bg-slate-900 text-white md:py-0 py-18 min-h-screen md:pb-4">
+      <div className="relative w-full">
         {trailerUrl ? (
           <div className="w-full aspect-video">
             <ReactPlayer
@@ -72,32 +72,29 @@ const MovieDetail = () => {
               height="100%"
               playing={false}
               controls={true}
-              light={
-                data?.Backdrop 
-              }
+              light={data?.Backdrop}
             />
           </div>
         ) : (
           <Image
-            src={data?.Backdrop }
+            src={data?.Backdrop}
             alt={data?.Title}
             className="w-full h-[50vh] object-cover"
-            radius={10}
           />
         )}
-        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-6">
-          <Group mx="auto" className="max-w-6xl">
+        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent md:p-6">
+          <Group mx="auto" maw={1120}>
             <Group gap={24}>
-              <Image
-                src={data?.Poster}
-                alt={data?.Title}
-                className="w-64 h-96 object-cover shadow-lg hidden md:block"
-                radius={10}
-              />
-              <Stack className="flex-1">
-                <Title order={1} className="text-4xl font-bold ">
-                  {data?.Title}
-                </Title>
+              <div className="md:block hidden">
+                <Image
+                  src={data?.Poster}
+                  alt={data?.Title}
+                  className="w-64 h-96 object-cover shadow-lg"
+                  radius={10}
+                />
+              </div>
+              <Stack flex={1}>
+                <Title>{data?.Title}</Title>
                 <Group>
                   <Group>
                     <Star
@@ -112,7 +109,7 @@ const MovieDetail = () => {
                     ({data?.imdbVotes} votes)
                   </span>
                 </Group>
-                <Text className="text-gray-300 ">
+                <Text c="gray.4">
                   {data?.Runtime} • {data?.Year}
                 </Text>
                 <Group gap="xs">
@@ -133,10 +130,10 @@ const MovieDetail = () => {
           </Group>
         </div>
       </div>
-      <Stack mx="auto" className="max-w-6xl">
+      <Stack mx="auto" maw={1120}>
         <Stack>
           <Title order={2}>Synopsis</Title>
-          <Text size="lg" className="text-gray-300 leading-relaxed">
+          <Text size="lg" c="gray.3">
             {data?.Plot}
           </Text>
         </Stack>
@@ -179,7 +176,7 @@ const MovieDetail = () => {
               <Title order={2}>Production companies</Title>
               <Flex gap="md">
                 {data?.Production.split(", ").map((company: string) => (
-                  <List key={company} className=" rounded-md">
+                  <List key={company} className="rounded-md">
                     <Badge p="md" bg="indigo.9">
                       {company}
                     </Badge>

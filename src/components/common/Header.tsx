@@ -71,7 +71,7 @@ const Header: React.FC<HeaderProps> = () => {
           </Group>
           <Group className="relative">
             <Autocomplete
-              className="md:block md:w-52 hidden"
+              className=" md:w-52 w-26"
               placeholder="Search movies..."
               value={searchValue}
               onChange={setSearchValue}
@@ -93,7 +93,7 @@ const Header: React.FC<HeaderProps> = () => {
             />
             <MdSearch
               size={20}
-              className="absolute top-2 right-4 text-gray-400 md:block hidden"
+              className="absolute top-2 right-4 text-gray-400 md:block hidden focus:hidden"
             />
           </Group>
         </Group>

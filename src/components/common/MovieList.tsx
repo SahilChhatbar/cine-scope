@@ -91,7 +91,7 @@ const MovieList = ({ type }: MovieListProps) => {
   return (
     <Container size="xl" px={100} py="md">
       <div className="flex justify-between items-center py-8 px-1">
-        <Title className="font-bold text-white capitalize">
+        <Title c="white" className="capitalize">
           <span className="flex md:text-3xl text-[17px] md:mt-0 mt-5 flex-row gap-3 text-center">
             <Center>{emoji}</Center>
             {type.replace("_", " ")} Movies

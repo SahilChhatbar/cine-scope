@@ -32,21 +32,21 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
               className="w-full h-full object-cover"
             />
             <div className="absolute bottom-0 w-[100%] h-72.5 px-4 pb-4 flex flex-col justify-end bg-gradient-to-t from-black to-transparent transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100">
-              <Title order={4} className="text-white text-base">
+              <Title order={4} c="white" >
                 {movie?.Title}
               </Title>
               <Group justify="space-between">
-                <Text fw={600} c="white" className="text-[0.75rem] ">
+                <Text fw={600} c="white" className="text-[0.75rem]">
                   {movie?.Year}
                 </Text>
-                <Group gap="xs" className="items-center">
+                <Group gap="xs" justify="center" align="center">
                   <Star size={20} className="text-yellow-400 fill-yellow-400" />
                   <Text fw={600} c="yellow.4" className="text-[0.75rem]">
                     {movie?.imdbRating || "N/A"}
                   </Text>
                 </Group>
               </Group>
-              <Text c="white" className="text-[0.75rem] italic line-clamp-3">
+              <Text c="white" lineClamp={3} className="italic">
                 {movie?.Plot || "No plot available"}
               </Text>
             </div>

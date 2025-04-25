@@ -3,21 +3,21 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Autoplay from "embla-carousel-autoplay";
 import { Carousel } from "@mantine/carousel";
-import { Box, Text, Stack, Center, Title } from "@mantine/core";
+import { Box, Text, Stack, Center, Title, Flex } from "@mantine/core";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { fetchMoviesByType } from "../../../utils/fetchMovies";
 import { FaStar } from "react-icons/fa";
 
 const PopularMovieSlides = () => {
-  const autoplay = useRef(Autoplay({ delay: 4500 }));
+  const autoplay = useRef(Autoplay({ delay: 4000 }));
 
   const { data, isLoading } = useQuery({
     queryKey: ["movies", "popular"],
     queryFn: () => fetchMoviesByType("popular", 1),
     select: (data) => data.movies.slice(0, 8),
   });
-  
+
   if (isLoading) {
     return (
       <Center>
@@ -55,9 +55,9 @@ const PopularMovieSlides = () => {
                   }}
                 />
                 <Box className="absolute inset-0 flex flex-col justify-end p-8 text-white bg-gradient-to-t from-black to-transparent transition-opacity duration-300">
-                  <Stack gap="sm" className="w-full">
+                  <Stack gap="sm" w="100%">
                     <Title>{movie?.Title}</Title>
-                    <Box className="flex items-center gap-5">
+                    <Flex gap="md">
                       <Text size="xl" className="opacity-90">
                         {movie?.Year}
                       </Text>
@@ -66,9 +66,9 @@ const PopularMovieSlides = () => {
                           <FaStar /> {movie?.imdbRating}
                         </span>
                       )}
-                    </Box>
+                    </Flex>
                     {movie?.Plot && (
-                      <Text className="text-lg opacity-80 line-clamp-3">
+                      <Text opacity="80%" size="lg" lineClamp={3} className="italic">
                         {movie?.Plot}
                       </Text>
                     )}
