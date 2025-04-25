@@ -133,7 +133,7 @@ const MovieDetail = () => {
       <Stack mx="auto" maw={1120}>
         <Stack>
           <Title order={2}>Synopsis</Title>
-          <Text size="lg" c="gray.3">
+          <Text size="lg" c="gray.3" className="italic">
             {data?.Plot}
           </Text>
         </Stack>
@@ -148,7 +148,7 @@ const MovieDetail = () => {
                 href={data?.Website}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full "
+                className="rounded-full"
               >
                 <span className="flex flex-row pt-2 p-2 gap-2">
                   Home Page <ExternalLink size={20} />

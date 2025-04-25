@@ -94,7 +94,7 @@ export const tmdbApi = {
         params: {
           api_key: TMDB_API_KEY,
           page,
-          per_page: 20
+          per_page: 20,
         }
       });
 
@@ -150,6 +150,27 @@ export const tmdbApi = {
       };
     } catch (error) {
       console.error('Error fetching upcoming movies:', error);
+      throw error;
+    }
+  },
+  getNowPlayingMovies: async (page: number = 1): Promise<MovieListResponse> => {
+    try {
+      const response = await axios.get(`${TMDB_BASE_URL}/movie/now_playing`, {
+        params: {
+          api_key: TMDB_API_KEY,
+          page,
+          region: 'IN',
+        }
+      });
+
+      return {
+        movies: response.data.results.map(transformMovieData).slice(0, 20),
+        totalResults: response.data.total_results,
+        page: response.data.page,
+        totalPages: response.data.total_pages,
+      };
+    } catch (error) {
+      console.error('Error fetching current movies:', error);
       throw error;
     }
   }

@@ -13,12 +13,13 @@ const links: NavLinkItem[] = [
   { link: "/popular", label: "Popular" },
   { link: "/upcoming", label: "Upcoming" },
   { link: "/toprated", label: "Top Rated" },
+  { link: "/now_playing", label: "Now Playing" },
 ];
 
 const Header: React.FC<HeaderProps> = () => {
   const [opened, { toggle }] = useDisclosure(false);
   const [searchValue, setSearchValue] = useState("");
-  const [debouncedSearch] = useDebouncedValue(searchValue, 500);
+  const [debouncedSearch] = useDebouncedValue(searchValue, 800);
   const navigate = useNavigate();
 
   const { data: searchResults } = useQuery({
@@ -33,8 +34,8 @@ const Header: React.FC<HeaderProps> = () => {
       to={link.link}
       className={({ isActive }: { isActive: boolean }) =>
         isActive
-          ? "block leading-none py-2 px-3 transition-all duration-250 text-white hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
-          : "block leading-none py-2 px-3 transition-all duration-250 text-gray-500 hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
+          ? "block leading-none py-2 px-5 transition-all duration-250 text-white hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
+          : "block leading-none py-2 px-5 transition-all duration-250 text-gray-500 hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
       }
     >
       {link.label}
@@ -47,7 +48,7 @@ const Header: React.FC<HeaderProps> = () => {
   };
 
   return (
-    <header className="h-fit p-2  bg-slate-900">
+    <header className="h-fit p-2 bg-slate-900">
       <Flex justify="space-around" align="center" h={60}>
         <Group>
           <Burger
@@ -99,7 +100,7 @@ const Header: React.FC<HeaderProps> = () => {
         </Group>
       </Flex>
       {opened && (
-        <Stack className="sm:hidden px-2 pt-2 pb-3 border-t border-gray-200  bg-white ">
+        <Stack className="sm:hidden px-2 pt-2 pb-3 border-t border-gray-200 bg-white ">
           {links.map((link: NavLinkItem) => (
             <NavLink
               key={link.label}

@@ -1,13 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  Container,
-  Title,
-  Alert,
-  Center,
-  Button,
-  Menu,
-  Loader,
-} from "@mantine/core";
+import { Container, Title, Alert, Center, Button, Menu } from "@mantine/core";
 import { FaChartLine, FaStar } from "react-icons/fa6";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { fetchMoviesByType } from "../../utils/fetchMovies";
@@ -15,6 +7,8 @@ import MovieCard from "./MovieCard";
 import { Movie, MovieListProps, SortOption } from "../../types/types";
 import { useState, useMemo, useCallback } from "react";
 import { MdSort } from "react-icons/md";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const MovieList = ({ type }: MovieListProps) => {
   const [sortBy, setSortBy] = useState<string>("default");
@@ -24,7 +18,6 @@ const MovieList = ({ type }: MovieListProps) => {
     queryFn: () => fetchMoviesByType(type, 1),
     retry: false,
   });
-
   const emoji =
     type === "popular" ? (
       <FaChartLine size={28} className="md:block hidden" />
@@ -87,9 +80,8 @@ const MovieList = ({ type }: MovieListProps) => {
       </Container>
     );
   }
-
   return (
-    <Container size="xl" px={100} py="md">
+    <Container size="xl" px="xl" py="md">
       <div className="flex justify-between items-center py-8 px-1">
         <Title c="white" className="capitalize">
           <span className="flex md:text-3xl text-[17px] md:mt-0 mt-5 flex-row gap-3 text-center">
@@ -121,9 +113,21 @@ const MovieList = ({ type }: MovieListProps) => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xm:grid-cols-4 psm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {isLoading ? (
-          <Center>
-            <Loader />
-          </Center>
+          Array.from({ length: 20 }).map((_, index) => (
+            <div key={index} className="flex justify-center">
+              <div className="group relative overflow-hidden xm:w-50 xm:h-75 sm:w-50 md:w-50 md:h-75 w-92 h-105 rounded-xl md:mb-0 mb-5">
+                <SkeletonTheme baseColor="gray" highlightColor="#444">
+                  <div className="w-full h-full">
+                    <Skeleton
+                      height="100%"
+                      duration={20000}
+                      className="rounded-xl"
+                    />
+                  </div>
+                </SkeletonTheme>
+              </div>
+            </div>
+          ))
         ) : sortedMovies.length > 0 ? (
           sortedMovies.map((movie: Movie) => (
             <div key={movie?.imdbID} className="flex justify-center">

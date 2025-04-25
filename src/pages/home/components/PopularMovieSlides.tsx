@@ -23,7 +23,9 @@ const PopularMovieSlides = () => {
       <Center>
         <div className="w-full max-w-280">
           <SkeletonTheme baseColor="gray" highlightColor="#444">
-            <Skeleton height={550} duration={2} />
+            <Center>
+              <Skeleton height={600} width={1210} duration={2} />
+            </Center>
           </SkeletonTheme>
         </div>
       </Center>
@@ -36,14 +38,7 @@ const PopularMovieSlides = () => {
 
   return (
     <Center>
-      <Carousel
-        height={550}
-        plugins={[autoplay.current]}
-        onMouseEnter={autoplay.current.stop}
-        onMouseLeave={autoplay.current.reset}
-        loop={true}
-        w={1120}
-      >
+      <Carousel height={600} plugins={[autoplay.current]} loop={true} w={1210}>
         {data?.map((movie) => (
           <Carousel.Slide key={movie?.imdbID}>
             <Link to={`/movie/${movie?.imdbID}`}>
@@ -68,7 +63,12 @@ const PopularMovieSlides = () => {
                       )}
                     </Flex>
                     {movie?.Plot && (
-                      <Text opacity="80%" size="lg" lineClamp={3} className="italic">
+                      <Text
+                        opacity="80%"
+                        size="lg"
+                        lineClamp={3}
+                        className="italic"
+                      >
                         {movie?.Plot}
                       </Text>
                     )}

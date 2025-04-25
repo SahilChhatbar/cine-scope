@@ -18,7 +18,7 @@ export interface SortOption {
 }
 
 export interface MovieListProps {
-    type: 'popular' | 'top_rated' | 'upcoming';
+    type: 'popular' | 'top_rated' | 'upcoming' | 'now_playing';
   }
   
   export interface Movie {
@@ -59,4 +59,4 @@ export interface MovieListProps {
     page: number;
     totalPages: number;
   }
-  export type MovieListType = 'popular' | 'top_rated' | 'upcoming';
+  export type MovieListType = 'popular' | 'top_rated' | 'upcoming' | 'now_playing';

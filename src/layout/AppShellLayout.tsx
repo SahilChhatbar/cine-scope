@@ -12,7 +12,7 @@ const Appshell = () => {
           md: 60,
         },
       }}
-      padding="lg"
+      padding="xs"
     >
       <AppShell.Header>
         <Header />

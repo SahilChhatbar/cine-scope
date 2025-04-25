@@ -13,6 +13,8 @@ export const fetchMoviesByType = async (
         return tmdbApi.getTopRatedMovies(page);
       case 'upcoming':
         return tmdbApi.getUpcomingMovies(page);
+      case 'now_playing':
+        return tmdbApi.getNowPlayingMovies(page);
       default:
         const _exhaustiveCheck: never = type;
         return _exhaustiveCheck;

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import React from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Image, Text, Group, Title } from "@mantine/core";
 import { Link } from "react-router-dom";
@@ -7,23 +6,9 @@ import { MovieCardProps } from "../../types/types";
 import { Star } from "lucide-react";
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  if (isLoading) {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-  }
 
   return (
     <>
-      {isLoading ? (
-        <div className="md:block hidden w-50">
-          <SkeletonTheme baseColor="gray" highlightColor="#444">
-            <Skeleton height={300} duration={2} />
-          </SkeletonTheme>
-        </div>
-      ) : (
         <Link to={`/movie/${movie?.imdbID}`} className="no-underline">
           <div className="group relative overflow-hidden xm:w-50 xm:h-75 sm:w-50 md:w-50 md:h-75 w-92 h-105 rounded-xl md:mb-0 mb-5 cursor-pointer transition-all duration-200 ease-in-out hover:scale-120 hover:z-[1000] hover:shadow-[rgba(0,0,0,0.25)_0px_54px_55px,rgba(0,0,0,0.12)_0px_-12px_30px,rgba(0,0,0,0.12)_0px_4px_6px,rgba(0,0,0,0.17)_0px_12px_13px,rgba(0,0,0,0.09)_0px_-3px_5px]">
             <Image
@@ -52,7 +37,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
             </div>
           </div>
         </Link>
-      )}
+      
     </>
   );
 };

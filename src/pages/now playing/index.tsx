@@ -1,11 +1,11 @@
 import MovieList from "../../components/common/MovieList";
 
-const Popular = () => {
+const NowPlaying = () => {
   return (
     <div className="min-h-screen">
-      <MovieList type="popular" />
+      <MovieList type="now_playing" />
     </div>
   );
 };
 
-export default Popular;
+export default NowPlaying;
