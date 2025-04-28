@@ -37,8 +37,7 @@ const PopularMovieSlides = () => {
   }
 
   return (
-    <Center>
-      <Carousel height={600} plugins={[autoplay.current]} loop={true} w={1210}>
+      <Carousel height={600} plugins={[autoplay.current]} loop={true} w="100%">
         {data?.map((movie) => (
           <Carousel.Slide key={movie?.imdbID}>
             <Link to={`/movie/${movie?.imdbID}`}>
@@ -79,7 +78,6 @@ const PopularMovieSlides = () => {
           </Carousel.Slide>
         ))}
       </Carousel>
-    </Center>
   );
 };
 

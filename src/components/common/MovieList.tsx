@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Container, Title, Alert, Center, Button, Menu } from "@mantine/core";
 import { FaChartLine, FaStar } from "react-icons/fa6";
-import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegCalendarAlt, FaRegDotCircle } from "react-icons/fa";
 import { fetchMoviesByType } from "../../utils/fetchMovies";
 import MovieCard from "./MovieCard";
 import { Movie, MovieListProps, SortOption } from "../../types/types";
@@ -23,8 +23,10 @@ const MovieList = ({ type }: MovieListProps) => {
       <FaChartLine size={28} className="md:block hidden" />
     ) : type === "top_rated" ? (
       <FaStar size={28} className="md:block hidden" />
-    ) : (
+    ) : type === "upcoming" ? (
       <FaRegCalendarAlt size={26} className="md:block hidden" />
+    ) : (
+      <FaRegDotCircle />
     );
 
   const sortOptions: SortOption[] = useMemo(
@@ -41,7 +43,7 @@ const MovieList = ({ type }: MovieListProps) => {
       },
       {
         id: "year",
-        label: "Year",
+        label: "Release",
         compareFn: (a, b) =>
           parseInt(String(b.Year)) - parseInt(String(a.Year)),
       },
@@ -74,15 +76,15 @@ const MovieList = ({ type }: MovieListProps) => {
   if (!data?.movies && !isLoading) {
     return (
       <Container size="xl">
-        <Alert title="Error" color="red" variant="filled" className="mb-4">
+        <Alert title="Error" color="red" variant="filled">
           Failed to load movies.
         </Alert>
       </Container>
     );
   }
   return (
-    <Container size="xl" px="xl" py="md">
-      <div className="flex justify-between items-center py-8 px-1">
+    <Container size="xl" px="xl" pb="xl">
+      <div className="flex justify-between py-5 px-4 items-center">
         <Title c="white" className="capitalize">
           <span className="flex md:text-3xl text-[17px] md:mt-0 mt-5 flex-row gap-3 text-center">
             <Center>{emoji}</Center>
@@ -118,11 +120,7 @@ const MovieList = ({ type }: MovieListProps) => {
               <div className="group relative overflow-hidden xm:w-50 xm:h-75 sm:w-50 md:w-50 md:h-75 w-92 h-105 rounded-xl md:mb-0 mb-5">
                 <SkeletonTheme baseColor="gray" highlightColor="#444">
                   <div className="w-full h-full">
-                    <Skeleton
-                      height="100%"
-                      duration={20000}
-                      className="rounded-xl"
-                    />
+                    <Skeleton height="100%" className="rounded-xl" />
                   </div>
                 </SkeletonTheme>
               </div>
@@ -135,7 +133,7 @@ const MovieList = ({ type }: MovieListProps) => {
             </div>
           ))
         ) : (
-          <div className="text-center">No movies found</div>
+          <Center>No movies found</Center>
         )}
       </div>
     </Container>

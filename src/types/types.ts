@@ -18,45 +18,62 @@ export interface SortOption {
 }
 
 export interface MovieListProps {
-    type: 'popular' | 'top_rated' | 'upcoming' | 'now_playing';
-  }
-  
-  export interface Movie {
-    imdbID: string;  
-    Title: string;   
-    Year: string;    
-    Poster: string;
-    Backdrop: string; 
-    Plot?: string;    
-    imdbRating?: string;
+  type: 'popular' | 'top_rated' | 'upcoming' | 'now_playing';
 }
-  
-  export interface MovieDetails extends Movie {
-    Runtime: string;
-    Genre: string;
-    Plot: string;
-    imdbRating: string;
-    imdbVotes: string;
-    Production: string;
-    Website: string;
-    Review:string;
-    Videos?: {
-      results: Array<{
-        id: string;
-        key: string;
-        name: string;
-        site: string;
-        size: number;
-        type: string;
-        official: boolean;
-      }>;
-    };
-  }
-  
-  export interface MovieListResponse {
-    movies: Movie[];
-    totalResults: number;
-    page: number;
-    totalPages: number;
-  }
-  export type MovieListType = 'popular' | 'top_rated' | 'upcoming' | 'now_playing';
+
+export interface Movie {
+  imdbID: string;
+  Title: string;
+  Year: number | string;
+  Poster: string | null;
+  Backdrop: string | null;
+  Plot?: string;
+  imdbRating?: string;
+}
+
+interface PersonCredit {
+  id: number;
+  name: string;
+  department?: string;
+}
+
+interface CastCredit extends PersonCredit {
+  character: string;
+  job?: string;
+}
+
+interface CrewCredit extends PersonCredit {
+  job: string;
+}
+
+export interface MovieDetails extends Movie {
+  Runtime: string;
+  Genre: string;
+  Plot: string;
+  imdbRating: string;
+  imdbVotes: string;
+  Production: string;
+  Website: string;
+  Similar?: Movie[];
+  Cast?: CastCredit[];
+  Crew?: CrewCredit[];
+  Videos?: {
+    results: Array<{
+      id: string;
+      key: string;
+      name: string;
+      site: string;
+      size: number;
+      type: string;
+      official: boolean;
+    }>;
+  };
+}
+
+export interface MovieListResponse {
+  movies: Movie[];
+  totalResults: number;
+  page: number;
+  totalPages: number;
+}
+export type MovieListType = 'popular' | 'top_rated' | 'upcoming' | 'now_playing';

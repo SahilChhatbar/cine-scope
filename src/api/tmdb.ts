@@ -21,28 +21,59 @@ const transformMovieData = (tmdbMovie: any): Movie => {
 export const tmdbApi = {
   getMovieDetails: async (movieId: string): Promise<MovieDetails> => {
     try {
-      const response = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}`, {
-        params: {
-          api_key: TMDB_API_KEY,
-          append_to_response: 'credits,videos',
-        },
-      });
-
+      const [movieResponse, similarResponse] = await Promise.all([
+        axios.get(`${TMDB_BASE_URL}/movie/${movieId}`, {
+          params: {
+            api_key: TMDB_API_KEY,
+            append_to_response: 'credits,videos',
+          },
+        }),
+        axios.get(`${TMDB_BASE_URL}/movie/${movieId}/similar`, {
+          params: {
+            api_key: TMDB_API_KEY,
+          },
+        }),
+      ]);
+  
+      const movie = movieResponse.data;
+      const similarMovies = similarResponse.data.results.slice(0, 5).map((movie: any) => ({
+        imdbID: movie.id,
+        Title: movie.title,
+        Year: new Date(movie.release_date).getFullYear(),
+        Poster: movie.poster_path ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}` : null,
+        Backdrop: movie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${movie.backdrop_path}` : null,
+        Plot: movie.overview,
+        imdbRating: (movie.vote_average).toFixed(1),
+}));
+  
       return {
-        imdbID: response.data.id.toString(),
-        Title: response.data.title,
-        Year: response.data.release_date.substring(0, 4),
-        Poster: response.data.poster_path ? `${TMDB_IMAGE_BASE_URL}${response.data.poster_path}` : '',
-        Backdrop: response.data.backdrop_path ? `${TMDB_IMAGE_BASE_URL}${response.data.backdrop_path}` : '',
-        Runtime: `${response.data.runtime} min`,
-        Genre: response.data.genres.map((g: any) => g.name).join(', '),
-        Plot: response.data.overview,
-        imdbRating: (response.data.vote_average / 2).toString(),
-        imdbVotes: response.data.vote_count.toString(),
-        Production: response.data.production_companies.map((comp: any) => comp.name).join(', '),
-        Website: response.data.homepage || 'N/A',
-        Videos: response.data.videos,
-        Review: response.data.reviews,
+        imdbID: movie.id.toString(),
+        Title: movie.title,
+        Year: new Date(movie.release_date).getFullYear().toString(),
+        Runtime: `${movie.runtime} min`,
+        Genre: movie.genres.map((g: any) => g.name).join(', '),
+        Plot: movie.overview,
+        Poster: movie.poster_path ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}` : '',
+        Backdrop: movie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${movie.backdrop_path}` : '',
+        Website: movie.homepage || 'N/A',
+        imdbRating: (movie.vote_average / 2).toFixed(1),
+        imdbVotes: movie.vote_count.toLocaleString(),
+        Production: movie.production_companies.map((company: any) => company.name).join(', '),
+        Cast: movie.credits.cast.slice(0, 10).map((cast: any) => ({
+          id: cast.id,
+          name: cast.name,
+          character: cast.character,
+        })),
+        Crew: movie.credits.crew
+          .filter((crew: any) => ['Director', 'Writer', 'Producer'].includes(crew.job))
+          .slice(0, 10)
+          .map((crew: any) => ({
+            id: crew.id,
+            name: crew.name,
+            job: crew.job,
+          })),
+        Similar: similarMovies,
+        
       };
     } catch (error) {
       console.error('Error fetching movie details:', error);

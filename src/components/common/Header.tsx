@@ -49,13 +49,13 @@ const Header: React.FC<HeaderProps> = () => {
 
   return (
     <header className="h-fit p-2 bg-slate-900">
-      <Flex justify="space-around" align="center" h={60}>
+      <Flex justify="space-evenly" align="center" h={60}>
         <Group>
           <Burger
             opened={opened}
             onClick={toggle}
             size="sm"
-            hiddenFrom="sm"
+            hiddenFrom="md"
             color="white"
             className="text-gray-200"
           />
@@ -67,7 +67,7 @@ const Header: React.FC<HeaderProps> = () => {
           </NavLink>
         </Group>
         <Group align="center">
-          <Group gap={5} visibleFrom="sm">
+          <Group gap={5} visibleFrom="md">
             {items}
           </Group>
           <Group className="relative">

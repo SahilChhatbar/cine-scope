@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 import { tmdbApi } from "../../api/tmdb";
 import { useEffect, useState } from "react";
+import MovieCard from "../common/MovieCard";
 import { Star, ExternalLink } from "lucide-react";
 
 const MovieDetail = () => {
@@ -62,7 +63,7 @@ const MovieDetail = () => {
     return <Text content="center">Failed to load movie details.</Text>;
 
   return (
-    <Stack className="bg-slate-900 text-white md:py-0 py-18 min-h-screen md:pb-4">
+    <Stack className="text-white md:py-0 py-18 min-h-screen md:pb-4">
       <div className="relative w-full">
         {trailerUrl ? (
           <div className="w-full aspect-video">
@@ -72,7 +73,6 @@ const MovieDetail = () => {
               height="100%"
               playing={false}
               controls={true}
-              light={data?.Backdrop}
             />
           </div>
         ) : (
@@ -83,7 +83,7 @@ const MovieDetail = () => {
           />
         )}
         <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent md:p-6">
-          <Group mx="auto" maw={1120}>
+          <Group mx="auto" maw={1220}>
             <Group gap={24}>
               <div className="md:block hidden">
                 <Image
@@ -130,7 +130,7 @@ const MovieDetail = () => {
           </Group>
         </div>
       </div>
-      <Stack mx="auto" maw={1120}>
+      <Stack mx="auto" maw={1220}>
         <Stack>
           <Title order={2}>Synopsis</Title>
           <Text size="lg" c="gray.3" className="italic">
@@ -171,7 +171,7 @@ const MovieDetail = () => {
           </Flex>
         </Stack>
         {data?.Production && data?.Production !== "N/A" && (
-          <div className="md:block hidden">
+          <Stack>
             <Stack>
               <Title order={2}>Production companies</Title>
               <Flex gap="md">
@@ -184,7 +184,56 @@ const MovieDetail = () => {
                 ))}
               </Flex>
             </Stack>
-          </div>
+            {((data?.Cast && data?.Cast.length > 0) ||
+              (data?.Crew && data?.Crew.length > 0)) && (
+              <Stack pt={20}>
+                <Group grow align="self-start">
+                  {data?.Cast && data?.Cast.length > 0 && (
+                    <Stack>
+                      <Title order={2}>Cast</Title>
+                      <List spacing="xs">
+                        {data?.Cast.map((member) => (
+                          <List.Item key={`cast-${member.id}`}>
+                            <Text fw={500}>{member?.name}</Text>
+                            <Text size="sm" c="dimmed">
+                              as {member?.character ? member?.character : "N/A"}
+                            </Text>
+                          </List.Item>
+                        ))}
+                      </List>
+                    </Stack>
+                  )}
+                  {data.Crew && data.Crew.length > 0 && (
+                    <Stack>
+                      <Title order={2}>Crew</Title>
+                      <List spacing="xs">
+                        {data.Crew.map((member) => (
+                          <List.Item key={`crew-${member.id}`}>
+                            <Text fw={500}>{member?.name}</Text>
+                            <Text size="sm" c="dimmed">
+                              {member?.job}
+                            </Text>
+                          </List.Item>
+                        ))}
+                      </List>
+                    </Stack>
+                  )}
+                </Group>
+              </Stack>
+            )}
+          </Stack>
+        )}
+        {data?.Similar && data?.Similar.length > 0 && (
+          <Stack>
+            <Title order={2}>Similar Movies</Title>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xm:grid-cols-4 psm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {data?.Similar.map((movie) => (
+                <div key={movie.imdbID} className="flex justify-center">
+                  <MovieCard movie={movie} />
+                </div>
+              ))}
+            </div>
+          </Stack>
         )}
       </Stack>
     </Stack>
