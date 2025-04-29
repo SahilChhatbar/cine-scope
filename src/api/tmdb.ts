@@ -21,7 +21,7 @@ const transformMovieData = (tmdbMovie: any): Movie => {
 export const tmdbApi = {
   getMovieDetails: async (movieId: string): Promise<MovieDetails> => {
     try {
-      const [movieResponse, similarResponse] = await Promise.all([
+      const [movieResponse, similarResponse, reviewsResponse] = await Promise.all([
         axios.get(`${TMDB_BASE_URL}/movie/${movieId}`, {
           params: {
             api_key: TMDB_API_KEY,
@@ -29,6 +29,10 @@ export const tmdbApi = {
           },
         }),
         axios.get(`${TMDB_BASE_URL}/movie/${movieId}/similar`, {
+          params: {
+            api_key: TMDB_API_KEY,
+          },
+        }), axios.get(`${TMDB_BASE_URL}/movie/${movieId}/reviews`, {
           params: {
             api_key: TMDB_API_KEY,
           },
@@ -45,6 +49,13 @@ export const tmdbApi = {
         Plot: movie.overview,
         imdbRating: (movie.vote_average).toFixed(1),
 }));
+        const reviews = reviewsResponse.data.results.slice(0, 10).map((review: any) => ({
+        id: review.id,
+        author: review.author,
+        content: review.content,
+        created_at: review.created_at,
+        rating: review.author_details?.rating || null,
+}));
   
       return {
         imdbID: movie.id.toString(),
@@ -58,6 +69,7 @@ export const tmdbApi = {
         Website: movie.homepage || 'N/A',
         imdbRating: (movie.vote_average / 2).toFixed(1),
         imdbVotes: movie.vote_count.toLocaleString(),
+        Reviews: reviews,
         Production: movie.production_companies.map((company: any) => company.name).join(', '),
         Cast: movie.credits.cast.slice(0, 10).map((cast: any) => ({
           id: cast.id,
@@ -204,5 +216,30 @@ export const tmdbApi = {
       console.error('Error fetching current movies:', error);
       throw error;
     }
-  }
+  },
+  getHotRightNow: async (page: number = 1): Promise<MovieListResponse> => {
+    try {
+      const currentDate = new Date().toISOString().split('T')[0];
+      const response = await axios.get(`${TMDB_BASE_URL}/discover/movie`, {
+        params: {
+          api_key: TMDB_API_KEY,
+          sort_by: 'popularity.desc',
+          region: 'IN',
+          'release_date.gte': currentDate,
+          page,
+          per_page: 20
+        }
+      });
+
+      return {
+        movies: response.data.results.map(transformMovieData).slice(0, 20),
+        totalResults: response.data.total_results,
+        page: response.data.page,
+        totalPages: response.data.total_pages,
+      };
+    } catch (error) {
+      console.error('Error fetching hot right now movies:', error);
+      throw error;
+    }
+  },
 };

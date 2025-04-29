@@ -34,8 +34,8 @@ const Header: React.FC<HeaderProps> = () => {
       to={link.link}
       className={({ isActive }: { isActive: boolean }) =>
         isActive
-          ? "block leading-none py-2 px-5 transition-all duration-250 text-white hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
-          : "block leading-none py-2 px-5 transition-all duration-250 text-gray-500 hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-lg"
+          ? "block leading-none py-2 px-5 transition-all duration-250 text-white hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-xl"
+          : "block leading-none py-2 px-5 transition-all duration-250 text-gray-500 hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-xl"
       }
     >
       {link.label}

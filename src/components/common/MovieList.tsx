@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Container, Title, Alert, Center, Button, Menu } from "@mantine/core";
 import { FaChartLine, FaStar } from "react-icons/fa6";
-import { FaRegCalendarAlt, FaRegDotCircle } from "react-icons/fa";
+import { FaHotjar, FaRegCalendarAlt, FaRegDotCircle } from "react-icons/fa";
 import { fetchMoviesByType } from "../../utils/fetchMovies";
 import MovieCard from "./MovieCard";
 import { Movie, MovieListProps, SortOption } from "../../types/types";
@@ -25,6 +25,8 @@ const MovieList = ({ type }: MovieListProps) => {
       <FaStar size={28} className="md:block hidden" />
     ) : type === "upcoming" ? (
       <FaRegCalendarAlt size={26} className="md:block hidden" />
+    ) : type === "hot_right_now" ? (
+      <FaHotjar size={26} className="md:block hidden" />
     ) : (
       <FaRegDotCircle />
     );
@@ -84,11 +86,11 @@ const MovieList = ({ type }: MovieListProps) => {
   }
   return (
     <Container size="xl" px="xl" pb="xl">
-      <div className="flex justify-between py-5 px-4 items-center">
+      <div className="flex justify-between md:py-5 px-2 items-center">
         <Title c="white" className="capitalize">
-          <span className="flex md:text-3xl text-[17px] md:mt-0 mt-5 flex-row gap-3 text-center">
+          <span className="flex md:text-3xl text-3xl md:pb-4 pb-8  md:ml-0 ml-3 flex-row gap-3 text-center">
             <Center>{emoji}</Center>
-            {type.replace("_", " ")} Movies
+            {type.replace(/_/g, " ")}
           </span>
         </Title>
         <div className="md:block hidden">
@@ -113,14 +115,14 @@ const MovieList = ({ type }: MovieListProps) => {
           </Menu>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xm:grid-cols-4 psm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xm:grid-cols-4 psm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
         {isLoading ? (
           Array.from({ length: 20 }).map((_, index) => (
             <div key={index} className="flex justify-center">
               <div className="group relative overflow-hidden xm:w-50 xm:h-75 sm:w-50 md:w-50 md:h-75 w-92 h-105 rounded-xl md:mb-0 mb-5">
                 <SkeletonTheme baseColor="gray" highlightColor="#444">
                   <div className="w-full h-full">
-                    <Skeleton height="100%" className="rounded-xl" />
+                    <Skeleton height="100%" className="rounded-xl"/>
                   </div>
                 </SkeletonTheme>
               </div>

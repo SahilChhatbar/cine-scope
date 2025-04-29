@@ -13,6 +13,7 @@ import {
   Image,
   Flex,
   List,
+  Tooltip,
 } from "@mantine/core";
 import { tmdbApi } from "../../api/tmdb";
 import { useEffect, useState } from "react";
@@ -63,10 +64,10 @@ const MovieDetail = () => {
     return <Text content="center">Failed to load movie details.</Text>;
 
   return (
-    <Stack className="text-white md:py-0 py-18 min-h-screen md:pb-4">
+    <Stack className="text-white md:py-0 py-18 min-h-screen md:pb-8">
       <div className="relative w-full">
         {trailerUrl ? (
-          <div className="w-full aspect-video">
+          <div className="w-full aspect-video pt-6">
             <ReactPlayer
               url={trailerUrl}
               width="100%"
@@ -79,18 +80,19 @@ const MovieDetail = () => {
           <Image
             src={data?.Backdrop}
             alt={data?.Title}
-            className="w-full h-[50vh] object-cover"
+            className="w-full h-full pt-6 object-cover"
+            radius={60}
           />
         )}
         <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent md:p-6">
-          <Group mx="auto" maw={1220}>
+          <Group mx="auto" px="sm" maw={1220}>
             <Group gap={24}>
               <div className="md:block hidden">
                 <Image
                   src={data?.Poster}
                   alt={data?.Title}
                   className="w-64 h-96 object-cover shadow-lg"
-                  radius={10}
+                  radius={30}
                 />
               </div>
               <Stack flex={1}>
@@ -112,25 +114,27 @@ const MovieDetail = () => {
                 <Text c="gray.4">
                   {data?.Runtime} • {data?.Year}
                 </Text>
-                <Group gap="xs">
-                  {data?.Genre.split(", ").map((genre: string) => (
-                    <Badge
-                      key={genre}
-                      color="dark"
-                      variant="filled"
-                      size="lg"
-                      className="rounded-full"
-                    >
-                      {genre}
-                    </Badge>
-                  ))}
-                </Group>
+                <div className="md:block hidden">
+                  <Group gap="xs">
+                    {data?.Genre.split(", ").map((genre: string) => (
+                      <Badge
+                        key={genre}
+                        color="dark"
+                        variant="filled"
+                        size="lg"
+                        className="rounded-full"
+                      >
+                        {genre}
+                      </Badge>
+                    ))}
+                  </Group>
+                </div>
               </Stack>
             </Group>
           </Group>
         </div>
       </div>
-      <Stack mx="auto" maw={1220}>
+      <Stack mx="auto" px="xl" maw={1220}>
         <Stack>
           <Title order={2}>Synopsis</Title>
           <Text size="lg" c="gray.3" className="italic">
@@ -223,10 +227,47 @@ const MovieDetail = () => {
             )}
           </Stack>
         )}
+        {data?.Reviews && data.Reviews.length > 0 && (
+          <Stack>
+            <Title order={2}>Reviews</Title>
+            <div className="space-y-4">
+              {data.Reviews.map((review) => (
+                <Tooltip
+                  key={review.id}
+                  label={review.content}
+                  position="bottom"
+                  multiline
+                  w={1000}
+                  withArrow
+                  transitionProps={{ transition: "fade", duration: 300 }}
+                >
+                  <div className="p-4 rounded-2xl bg-slate-800 cursor-pointer">
+                    <Group justify="space-between" mb="xs">
+                      <Text fw={500} size="lg" >
+                        {review?.author}
+                      </Text>
+                      {review?.rating && (
+                        <Text size="sm" className="font-mono italic">
+                          {review?.rating}/10
+                        </Text>
+                      )}
+                    </Group>
+                    <Text size="sm" c="dimmed" mb="xs">
+                      {new Date(review?.created_at).toLocaleDateString()}
+                    </Text>
+                    <Text lineClamp={3} size="sm" className="italic">
+                      {review?.content}
+                    </Text>
+                  </div>
+                </Tooltip>
+              ))}
+            </div>
+          </Stack>
+        )}
         {data?.Similar && data?.Similar.length > 0 && (
           <Stack>
             <Title order={2}>Similar Movies</Title>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xm:grid-cols-4 psm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xm:grid-cols-4 psm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
               {data?.Similar.map((movie) => (
                 <div key={movie.imdbID} className="flex justify-center">
                   <MovieCard movie={movie} />

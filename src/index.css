@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 
-
 @layer utilities {
   @media (min-width: 1024px) and (max-width: 1286px) {
     .xm\:grid-cols-4 {

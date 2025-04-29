@@ -1,5 +1,5 @@
 import { tmdbApi } from '../api/tmdb';
-import { MovieListResponse,MovieListType } from '../types/types';
+import { MovieListResponse, MovieListType } from '../types/types';
 
 export const fetchMoviesByType = async (
   type: MovieListType, 
@@ -15,6 +15,8 @@ export const fetchMoviesByType = async (
         return tmdbApi.getUpcomingMovies(page);
       case 'now_playing':
         return tmdbApi.getNowPlayingMovies(page);
+      case 'hot_right_now':
+        return tmdbApi.getHotRightNow(page);
       default:
         const _exhaustiveCheck: never = type;
         return _exhaustiveCheck;

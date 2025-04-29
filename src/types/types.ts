@@ -18,7 +18,7 @@ export interface SortOption {
 }
 
 export interface MovieListProps {
-  type: 'popular' | 'top_rated' | 'upcoming' | 'now_playing';
+  type: 'popular' | 'top_rated' | 'upcoming' | 'now_playing' | 'hot_right_now';
 }
 
 export interface Movie {
@@ -57,6 +57,7 @@ export interface MovieDetails extends Movie {
   Similar?: Movie[];
   Cast?: CastCredit[];
   Crew?: CrewCredit[];
+  Reviews?: Review[];
   Videos?: {
     results: Array<{
       id: string;
@@ -70,10 +71,18 @@ export interface MovieDetails extends Movie {
   };
 }
 
+export interface Review {
+  id: string;
+  author: string;
+  content: string;
+  created_at: string;
+  rating?: number;
+}
+
 export interface MovieListResponse {
   movies: Movie[];
   totalResults: number;
   page: number;
   totalPages: number;
 }
-export type MovieListType = 'popular' | 'top_rated' | 'upcoming' | 'now_playing';
+export type MovieListType = 'popular' | 'top_rated' | 'upcoming' | 'now_playing' | 'hot_right_now';
