@@ -20,15 +20,15 @@ const MovieList = ({ type }: MovieListProps) => {
   });
   const emoji =
     type === "popular" ? (
-      <FaChartLine size={28} className="md:block hidden" />
+      <FaChartLine size={26} className="md:block hidden" />
     ) : type === "top_rated" ? (
-      <FaStar size={28} className="md:block hidden" />
+      <FaStar size={26} className="md:block hidden" />
     ) : type === "upcoming" ? (
-      <FaRegCalendarAlt size={26} className="md:block hidden" />
+      <FaRegCalendarAlt size={24} className="md:block hidden" />
     ) : type === "hot_right_now" ? (
       <FaHotjar size={26} className="md:block hidden" />
     ) : (
-      <FaRegDotCircle />
+      <FaRegDotCircle size={26} />
     );
 
   const sortOptions: SortOption[] = useMemo(
@@ -94,10 +94,11 @@ const MovieList = ({ type }: MovieListProps) => {
           </span>
         </Title>
         <div className="md:block hidden">
-          <Menu shadow="md" width={200}>
+          <Menu shadow="md" width={100} position={{ top: 0, right: 0 }}>
             <Menu.Target>
               <Button variant="ghost" bg="none" c="white">
-                <Title order={2}>Sort</Title> <MdSort size={35} />
+                <Title>Sort</Title>
+                <MdSort size={40} />
               </Button>
             </Menu.Target>
             <Menu.Dropdown>
@@ -120,9 +121,13 @@ const MovieList = ({ type }: MovieListProps) => {
           Array.from({ length: 20 }).map((_, index) => (
             <div key={index} className="flex justify-center">
               <div className="group relative overflow-hidden xm:w-50 xm:h-75 sm:w-50 md:w-50 md:h-75 w-92 h-105 rounded-xl md:mb-0 mb-5">
-                <SkeletonTheme baseColor="gray" highlightColor="#444">
+                <SkeletonTheme
+                  baseColor="gray"
+                  borderRadius={16}
+                  highlightColor="#444"
+                >
                   <div className="w-full h-full">
-                    <Skeleton height="100%" className="rounded-xl"/>
+                    <Skeleton height="100%" />
                   </div>
                 </SkeletonTheme>
               </div>

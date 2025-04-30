@@ -10,7 +10,7 @@ const transformMovieData = (tmdbMovie: any): Movie => {
   return {
     imdbID: tmdbMovie.id.toString(),
     Title: tmdbMovie.title,
-    Year: tmdbMovie.release_date?.substring(0, 4) || '',
+    Year: new Date(tmdbMovie.release_date).getFullYear().toString(),
     Poster: tmdbMovie.poster_path ? `${TMDB_IMAGE_BASE_URL}${tmdbMovie.poster_path}` : '',
     Backdrop: tmdbMovie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${tmdbMovie.backdrop_path}` : '',
     Plot: tmdbMovie.overview || '',
@@ -43,7 +43,7 @@ export const tmdbApi = {
       const similarMovies = similarResponse.data.results.slice(0, 5).map((movie: any) => ({
         imdbID: movie.id,
         Title: movie.title,
-        Year: new Date(movie.release_date).getFullYear(),
+        Year: movie.release_date, 
         Poster: movie.poster_path ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}` : null,
         Backdrop: movie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${movie.backdrop_path}` : null,
         Plot: movie.overview,

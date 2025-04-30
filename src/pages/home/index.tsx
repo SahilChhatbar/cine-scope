@@ -8,10 +8,10 @@ const Home = () => {
   return (
     <>
       {context === "carousel" ? (
-        <PopularMovieSlides/>
+        <PopularMovieSlides />
       ) : (
         <div className="md:py-4">
-          <MovieList type="hot_right_now"/>
+          <MovieList type="hot_right_now" />
         </div>
       )}
     </>

@@ -65,6 +65,10 @@ const MovieDetail = () => {
 
   return (
     <Stack className="text-white md:py-0 py-18 min-h-screen md:pb-8">
+      <div className="lg:hidden block p-0">
+        <Title content="center">{data?.Title}</Title>
+        <span className="text-gray-400">{data?.Year}</span>
+      </div>
       <div className="relative w-full">
         {trailerUrl ? (
           <div className="w-full aspect-video pt-6">
@@ -87,7 +91,7 @@ const MovieDetail = () => {
         <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent md:p-6">
           <Group mx="auto" px="sm" maw={1220}>
             <Group gap={24}>
-              <div className="md:block hidden">
+              <div className="lg:block hidden">
                 <Image
                   src={data?.Poster}
                   alt={data?.Title}
@@ -95,53 +99,55 @@ const MovieDetail = () => {
                   radius={30}
                 />
               </div>
-              <Stack flex={1}>
-                <Title>{data?.Title}</Title>
-                <Group>
+              <div className="md:block hidden">
+                <Stack flex={1}>
+                  <Title>{data?.Title}</Title>
                   <Group>
-                    <Star
-                      size={20}
-                      className="text-yellow-400 fill-yellow-400"
-                    />
-                    <span className="text-yellow-400">
-                      {Number(data?.imdbRating) * 2}
+                    <Group>
+                      <Star
+                        size={20}
+                        className="text-yellow-400 fill-yellow-400"
+                      />
+                      <span className="text-yellow-400">
+                        {Number(data?.imdbRating) * 2}
+                      </span>
+                    </Group>
+                    <span className="text-gray-400">
+                      ({data?.imdbVotes} votes)
                     </span>
                   </Group>
-                  <span className="text-gray-400">
-                    ({data?.imdbVotes} votes)
-                  </span>
-                </Group>
-                <Text c="gray.4">
-                  {data?.Runtime} • {data?.Year}
-                </Text>
-                <div className="md:block hidden">
-                  <Group gap="xs">
-                    {data?.Genre.split(", ").map((genre: string) => (
-                      <Badge
-                        key={genre}
-                        color="dark"
-                        variant="filled"
-                        size="lg"
-                        className="rounded-full"
-                      >
-                        {genre}
-                      </Badge>
-                    ))}
-                  </Group>
-                </div>
-              </Stack>
+                  <Text c="gray.4">
+                    {data?.Runtime} • {data?.Year}
+                  </Text>
+                  <div className="md:block hidden">
+                    <Group gap="xs">
+                      {data?.Genre.split(", ").map((genre: string) => (
+                        <Badge
+                          key={genre}
+                          color="dark"
+                          variant="filled"
+                          size="lg"
+                          className="rounded-full"
+                        >
+                          {genre}
+                        </Badge>
+                      ))}
+                    </Group>
+                  </div>
+                </Stack>
+              </div>
             </Group>
           </Group>
         </div>
       </div>
-      <Stack mx="auto" px="xl" maw={1220}>
+      <Stack mx="auto" maw={1220} className="md:px-10 px-0">
         <Stack>
           <Title order={2}>Synopsis</Title>
           <Text size="lg" c="gray.3" className="italic">
             {data?.Plot}
           </Text>
         </Stack>
-        <Stack>
+        <Stack pb={0}>
           <Title order={2}>Useful Links</Title>
           <Flex gap={16}>
             {data?.Website && data?.Website !== "N/A" && (
@@ -176,9 +182,9 @@ const MovieDetail = () => {
         </Stack>
         {data?.Production && data?.Production !== "N/A" && (
           <Stack>
-            <Stack>
+            <div className="md:block hidden">
               <Title order={2}>Production companies</Title>
-              <Flex gap="md">
+              <Flex gap="md" py={20} pb={0}>
                 {data?.Production.split(", ").map((company: string) => (
                   <List key={company} className="rounded-md">
                     <Badge p="md" bg="indigo.9">
@@ -187,10 +193,10 @@ const MovieDetail = () => {
                   </List>
                 ))}
               </Flex>
-            </Stack>
+            </div>
             {((data?.Cast && data?.Cast.length > 0) ||
               (data?.Crew && data?.Crew.length > 0)) && (
-              <Stack pt={20}>
+              <Stack>
                 <Group grow align="self-start">
                   {data?.Cast && data?.Cast.length > 0 && (
                     <Stack>
@@ -237,13 +243,13 @@ const MovieDetail = () => {
                   label={review.content}
                   position="bottom"
                   multiline
-                  w={1000}
+                  w={1140}
                   withArrow
                   transitionProps={{ transition: "fade", duration: 300 }}
                 >
-                  <div className="p-4 rounded-2xl bg-slate-800 cursor-pointer">
+                  <div className="p-4 rounded-2xl bg-indigo-900 cursor-pointer">
                     <Group justify="space-between" mb="xs">
-                      <Text fw={500} size="lg" >
+                      <Text fw={500} size="lg">
                         {review?.author}
                       </Text>
                       {review?.rating && (

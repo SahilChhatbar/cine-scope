@@ -22,10 +22,14 @@ const PopularMovieSlides = () => {
   if (isLoading) {
     return (
       <Center>
-        <div className="w-full max-w-280">
-          <SkeletonTheme baseColor="gray" highlightColor="#444">
+        <div className="w-full max-w-320">
+          <SkeletonTheme
+            baseColor="gray"
+            borderRadius={24}
+            highlightColor="#444"
+          >
             <Center>
-              <Skeleton height={600} width={1210} duration={2} />
+              <Skeleton height={600} width={1280} duration={2} />
             </Center>
           </SkeletonTheme>
         </div>
@@ -43,7 +47,7 @@ const PopularMovieSlides = () => {
       plugins={[autoplay.current]}
       loop={true}
       nextControlIcon={<MdArrowForward size={30} />}
-      previousControlIcon={<MdArrowBack size={30} />} 
+      previousControlIcon={<MdArrowBack size={30} />}
       w="100%"
       className="md:mt-0 mt-18"
     >

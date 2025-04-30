@@ -24,7 +24,8 @@ export interface MovieListProps {
 export interface Movie {
   imdbID: string;
   Title: string;
-  Year: number | string;
+  Year: string;
+  Release?: string | number;
   Poster: string | null;
   Backdrop: string | null;
   Plot?: string;

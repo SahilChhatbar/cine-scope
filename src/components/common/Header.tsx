@@ -70,37 +70,33 @@ const Header: React.FC<HeaderProps> = () => {
           <Group gap={5} visibleFrom="md">
             {items}
           </Group>
-          <Group className="relative">
-            <Autocomplete
-              className=" md:w-52 w-26"
-              placeholder="Search movies..."
-              value={searchValue}
-              onChange={setSearchValue}
-              data={
-                searchResults?.movies.map((movie: Movie) => ({
-                  value: movie?.imdbID,
-                  label: `${movie?.Title} (${movie?.Year})`,
-                })) || []
-              }
-              onOptionSubmit={handleSearchSelect}
-              styles={{
-                input: {
-                  backgroundColor: "#0f172a",
-                  color: "white",
-                  border: "1px solid #5a5a55",
-                  borderRadius: "0.5rem",
-                },
-              }}
-            />
-            <MdSearch
-              size={20}
-              className="absolute top-2 right-4 text-gray-400 md:block hidden focus:hidden"
-            />
-          </Group>
+          <Autocomplete
+            radius={10}
+            placeholder="Search movies..."
+            value={searchValue}
+            aria-label="input"
+            size="xs"
+            rightSection={<MdSearch size={20} color="white" />}
+            styles={{
+              input: {
+                backgroundColor: "#1e293b",
+                border: "none",
+                color: "white",
+              },
+            }}
+            onChange={setSearchValue}
+            data={
+              searchResults?.movies.map((movie: Movie) => ({
+                value: movie?.imdbID,
+                label: `${movie?.Title} (${movie?.Year})`,
+              })) || []
+            }
+            onOptionSubmit={handleSearchSelect}
+          />
         </Group>
       </Flex>
       {opened && (
-        <Stack className="sm:hidden px-2 pt-2 pb-3 border-t border-gray-200 bg-white ">
+        <Stack className="sm:hidden px-2 pt-2 pb-3 border-t border-gray-200 bg-white">
           {links.map((link: NavLinkItem) => (
             <NavLink
               key={link.label}
@@ -108,7 +104,7 @@ const Header: React.FC<HeaderProps> = () => {
               className={({ isActive }: { isActive: boolean }) =>
                 isActive
                   ? "block py-2 px-3 rounded text-slate-900 font-medium text-sm bg-gray-100"
-                  : "block py-2 px-3 rounded text-gray-700 font-medium text-sm hover:bg-gray-100 "
+                  : "block py-2 px-3 rounded text-gray-700 font-medium text-sm hover:bg-gray-100"
               }
               onClick={() => opened && toggle()}
             >
