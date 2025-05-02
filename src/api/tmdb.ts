@@ -5,18 +5,24 @@ const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const TMDB_BACKDROP_BASE_URL = 'https://image.tmdb.org/t/p/original';
+const MAX_PAGES = 500; 
 
-const transformMovieData = (tmdbMovie: any): Movie => {
-  return {
-    imdbID: tmdbMovie.id.toString(),
-    Title: tmdbMovie.title,
-    Year: new Date(tmdbMovie.release_date).getFullYear().toString(),
-    Poster: tmdbMovie.poster_path ? `${TMDB_IMAGE_BASE_URL}${tmdbMovie.poster_path}` : '',
-    Backdrop: tmdbMovie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${tmdbMovie.backdrop_path}` : '',
-    Plot: tmdbMovie.overview || '',
-    imdbRating: tmdbMovie.vote_average ? tmdbMovie.vote_average.toFixed(1) : 'N/A'
-  };
-};
+const transformMovieData = (tmdbMovie: any): Movie => ({
+  imdbID: tmdbMovie.id.toString(),
+  Title: tmdbMovie.title,
+  Year: new Date(tmdbMovie.release_date).getFullYear().toString(),
+  Poster: tmdbMovie.poster_path ? `${TMDB_IMAGE_BASE_URL}${tmdbMovie.poster_path}` : '',
+  Backdrop: tmdbMovie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${tmdbMovie.backdrop_path}` : '',
+  Plot: tmdbMovie.overview || '',
+  imdbRating: tmdbMovie.vote_average ? tmdbMovie.vote_average.toFixed(1) : 'N/A'
+});
+
+const handleApiResponse = (response: any): MovieListResponse => ({
+  movies: response.results.map(transformMovieData),
+  totalResults: response.total_results,
+  page: response.page,
+  totalPages: Math.min(response.total_pages, MAX_PAGES),
+});
 
 export const tmdbApi = {
   getMovieDetails: async (movieId: string): Promise<MovieDetails> => {
@@ -32,31 +38,24 @@ export const tmdbApi = {
           params: {
             api_key: TMDB_API_KEY,
           },
-        }), axios.get(`${TMDB_BASE_URL}/movie/${movieId}/reviews`, {
+        }),
+        axios.get(`${TMDB_BASE_URL}/movie/${movieId}/reviews`, {
           params: {
             api_key: TMDB_API_KEY,
           },
         }),
       ]);
-  
+
       const movie = movieResponse.data;
-      const similarMovies = similarResponse.data.results.slice(0, 5).map((movie: any) => ({
-        imdbID: movie.id,
-        Title: movie.title,
-        Year: movie.release_date, 
-        Poster: movie.poster_path ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}` : null,
-        Backdrop: movie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${movie.backdrop_path}` : null,
-        Plot: movie.overview,
-        imdbRating: (movie.vote_average).toFixed(1),
-}));
-        const reviews = reviewsResponse.data.results.slice(0, 10).map((review: any) => ({
+      const similarMovies = similarResponse.data.results.slice(0, 5).map(transformMovieData);
+      const reviews = reviewsResponse.data.results.slice(0, 10).map((review: any) => ({
         id: review.id,
         author: review.author,
         content: review.content,
         created_at: review.created_at,
         rating: review.author_details?.rating || null,
-}));
-  
+      }));
+
       return {
         imdbID: movie.id.toString(),
         Title: movie.title,
@@ -85,7 +84,6 @@ export const tmdbApi = {
             job: crew.job,
           })),
         Similar: similarMovies,
-        
       };
     } catch (error) {
       console.error('Error fetching movie details:', error);
@@ -93,40 +91,33 @@ export const tmdbApi = {
     }
   },
 
-  getMovieVideos: async (movieId: string): Promise<any> => {
-    try {
-      const response = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}/videos`, {
-        params: {
-          api_key: TMDB_API_KEY
-        }
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching movie videos:', error);
-      throw error;
-    }
-  },
-
-  searchMovies: async (query: string): Promise<MovieListResponse> => {
+  searchMovies: async (query: string, page: number = 1): Promise<MovieListResponse> => {
     if (!query) return { movies: [], totalResults: 0, page: 1, totalPages: 0 };
     
     try {
       const response = await axios.get(`${TMDB_BASE_URL}/search/movie`, {
         params: {
           api_key: TMDB_API_KEY,
-          query: query,
-          page: 1
+          query,
+          page,
         }
       });
 
-      return {
-        movies: response.data.results.map(transformMovieData),
-        totalResults: response.data.total_results,
-        page: response.data.page,
-        totalPages: response.data.total_pages,
-      };
+      return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error searching movies:', error);
+      throw error;
+    }
+  },
+
+  getMovieVideos: async (movieId: string): Promise<any> => {
+    try {
+      const response = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}/videos`, {
+        params: { api_key: TMDB_API_KEY }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching movie videos:', error);
       throw error;
     }
   },
@@ -137,16 +128,10 @@ export const tmdbApi = {
         params: {
           api_key: TMDB_API_KEY,
           page,
-          per_page: 20,
         }
       });
 
-      return {
-        movies: response.data.results.map(transformMovieData).slice(0, 20),
-        totalResults: response.data.total_results,
-        page: response.data.page,
-        totalPages: response.data.total_pages,
-      };
+      return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error fetching popular movies:', error);
       throw error;
@@ -159,16 +144,10 @@ export const tmdbApi = {
         params: {
           api_key: TMDB_API_KEY,
           page,
-          per_page: 20
         }
       });
 
-      return {
-        movies: response.data.results.map(transformMovieData).slice(0, 20),
-        totalResults: response.data.total_results,
-        page: response.data.page,
-        totalPages: response.data.total_pages,
-      };
+      return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error fetching top rated movies:', error);
       throw error;
@@ -181,21 +160,16 @@ export const tmdbApi = {
         params: {
           api_key: TMDB_API_KEY,
           page,
-          per_page: 20
         }
       });
 
-      return {
-        movies: response.data.results.map(transformMovieData).slice(0, 20),
-        totalResults: response.data.total_results,
-        page: response.data.page,
-        totalPages: response.data.total_pages,
-      };
+      return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error fetching upcoming movies:', error);
       throw error;
     }
   },
+
   getNowPlayingMovies: async (page: number = 1): Promise<MovieListResponse> => {
     try {
       const response = await axios.get(`${TMDB_BASE_URL}/movie/now_playing`, {
@@ -206,17 +180,13 @@ export const tmdbApi = {
         }
       });
 
-      return {
-        movies: response.data.results.map(transformMovieData).slice(0, 20),
-        totalResults: response.data.total_results,
-        page: response.data.page,
-        totalPages: response.data.total_pages,
-      };
+      return handleApiResponse(response.data);
     } catch (error) {
-      console.error('Error fetching current movies:', error);
+      console.error('Error fetching now playing movies:', error);
       throw error;
     }
   },
+
   getHotRightNow: async (page: number = 1): Promise<MovieListResponse> => {
     try {
       const currentDate = new Date().toISOString().split('T')[0];
@@ -227,16 +197,10 @@ export const tmdbApi = {
           region: 'IN',
           'release_date.gte': currentDate,
           page,
-          per_page: 20
         }
       });
 
-      return {
-        movies: response.data.results.map(transformMovieData).slice(0, 20),
-        totalResults: response.data.total_results,
-        page: response.data.page,
-        totalPages: response.data.total_pages,
-      };
+      return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error fetching hot right now movies:', error);
       throw error;

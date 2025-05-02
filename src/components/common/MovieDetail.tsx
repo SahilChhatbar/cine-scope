@@ -19,6 +19,7 @@ import { tmdbApi } from "../../api/tmdb";
 import { useEffect, useState } from "react";
 import MovieCard from "../common/MovieCard";
 import { Star, ExternalLink } from "lucide-react";
+import { youtubeUrl } from "../../constants";
 
 const MovieDetail = () => {
   const { movieId } = useParams<{ movieId: string }>();
@@ -49,7 +50,7 @@ const MovieDetail = () => {
 
       if (trailer || fallbackTrailer) {
         const videoKey = trailer?.key || fallbackTrailer?.key;
-        setTrailerUrl(`https://www.youtube.com/watch?v=${videoKey}`);
+        setTrailerUrl(`${youtubeUrl}=${videoKey}`);
       }
     }
   }, [videosData]);
@@ -187,7 +188,7 @@ const MovieDetail = () => {
               <Flex gap="md" py={20} pb={0}>
                 {data?.Production.split(", ").map((company: string) => (
                   <List key={company} className="rounded-md">
-                    <Badge p="md" bg="indigo.9">
+                    <Badge p="md" bg="indigo.9" >
                       {company}
                     </Badge>
                   </List>

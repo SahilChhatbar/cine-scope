@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { Autocomplete, Burger, Flex, Group, Stack } from "@mantine/core";
 import { MdSearch } from "react-icons/md";
 import { BiCameraMovie } from "react-icons/bi";
@@ -18,6 +18,7 @@ const links: NavLinkItem[] = [
 
 const Header: React.FC<HeaderProps> = () => {
   const [opened, { toggle }] = useDisclosure(false);
+  const [searchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearch] = useDebouncedValue(searchValue, 800);
   const navigate = useNavigate();
@@ -31,7 +32,9 @@ const Header: React.FC<HeaderProps> = () => {
   const items = links.map((link: NavLinkItem) => (
     <NavLink
       key={link.label}
-      to={link.link}
+      to={`${link.link}${
+        searchParams.toString() ? `?${searchParams.toString()}` : ""
+      }`}
       className={({ isActive }: { isActive: boolean }) =>
         isActive
           ? "block leading-none py-2 px-5 transition-all duration-250 text-white hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-xl"
@@ -43,12 +46,11 @@ const Header: React.FC<HeaderProps> = () => {
   ));
 
   const handleSearchSelect = (movieId: string) => {
-    setSearchValue("");
     navigate(`/movie/${movieId}`);
   };
 
   return (
-    <header className="h-fit p-2 bg-slate-900">
+    <header className="h-fit p-2 shadow-2xl bg-gradient-to-r from-[#191a1b] via-slate-900 to-[#191a1b]">
       <Flex justify="space-evenly" align="center" h={60}>
         <Group>
           <Burger
@@ -75,8 +77,8 @@ const Header: React.FC<HeaderProps> = () => {
             placeholder="Search movies..."
             value={searchValue}
             aria-label="input"
-            size="xs"
             rightSection={<MdSearch size={20} color="white" />}
+            className="md:w-54 w-40"
             styles={{
               input: {
                 backgroundColor: "#1e293b",

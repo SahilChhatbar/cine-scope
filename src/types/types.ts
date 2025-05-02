@@ -80,10 +80,21 @@ export interface Review {
   rating?: number;
 }
 
+export interface SortOption {
+  id: string;
+  label: string;
+  compareFn: (a: Movie, b: Movie) => number;
+}
+
 export interface MovieListResponse {
   movies: Movie[];
   totalResults: number;
   page: number;
   totalPages: number;
 }
+export interface MovieData {
+  movies: Movie[];
+  totalPages: number;
+}
+
 export type MovieListType = 'popular' | 'top_rated' | 'upcoming' | 'now_playing' | 'hot_right_now';

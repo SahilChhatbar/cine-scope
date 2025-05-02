@@ -1,5 +1,5 @@
-import { tmdbApi } from '../api/tmdb';
 import { MovieListResponse, MovieListType } from '../types/types';
+import { tmdbApi } from '../api/tmdb';
 
 export const fetchMoviesByType = async (
   type: MovieListType, 
