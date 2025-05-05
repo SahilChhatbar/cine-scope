@@ -9,8 +9,7 @@ import {
   Group,
   Pagination,
 } from "@mantine/core";
-import { FaChartLine, FaStar } from "react-icons/fa6";
-import { FaHotjar, FaRegCalendarAlt, FaRegDotCircle } from "react-icons/fa";
+import { FaHotjar } from "react-icons/fa";
 import { fetchMoviesByType } from "../../utils/fetchMovies";
 import MovieCard from "./MovieCard";
 import {
@@ -20,7 +19,13 @@ import {
   MovieData,
 } from "../../types/types";
 import { useState, useMemo } from "react";
-import { MdSort } from "react-icons/md";
+import {
+  MdLiveTv,
+  MdSort,
+  MdStars,
+  MdTrendingUp,
+  MdUpcoming,
+} from "react-icons/md";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { AnimatePresence, motion } from "framer-motion";
@@ -37,15 +42,15 @@ const MovieList = ({ type }: MovieListProps) => {
 
   const emoji =
     type === "popular" ? (
-      <FaChartLine size={26} className="md:block hidden" />
+      <MdTrendingUp size={36} className="md:block hidden" />
     ) : type === "top_rated" ? (
-      <FaStar size={26} className="md:block hidden" />
+      <MdStars size={34} className="md:block hidden" />
     ) : type === "upcoming" ? (
-      <FaRegCalendarAlt size={24} className="md:block hidden" />
+      <MdUpcoming size={36} className="md:block hidden" />
     ) : type === "hot_right_now" ? (
-      <FaHotjar size={26} className="md:block hidden" />
+      <FaHotjar size={36} className="md:block hidden" />
     ) : (
-      <FaRegDotCircle size={26} />
+      <MdLiveTv size={36} />
     );
 
   const sortOptions: SortOption[] = useMemo(
@@ -90,7 +95,7 @@ const MovieList = ({ type }: MovieListProps) => {
   const shouldShowSkeleton = isLoading || isFetching;
 
   return (
-    <Container size="xl" px="xl" pb="xl">
+    <Container size="xl" px="lg" pb="lg">
       <div className="flex justify-between items-center">
         <Title c="white" className="capitalize" py="md">
           <motion.span
@@ -125,7 +130,7 @@ const MovieList = ({ type }: MovieListProps) => {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentPage}
-          className="grid grid-cols-1 sm:grid-cols-2 xm:grid-cols-4 psm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 xm:grid-cols-4 psm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-6"
           variants={container}
           initial="hidden"
           animate="show"
@@ -138,7 +143,7 @@ const MovieList = ({ type }: MovieListProps) => {
                 className="flex justify-center"
                 variants={item}
               >
-                <div className="group relative overflow-hidden xm:w-50 xm:h-75 sm:w-50 md:w-50 md:h-75 w-92 h-105 rounded-xl md:mb-0 mb-5">
+                <div className="group relative overflow-hidden sm:w-50 md:w-50 md:h-75 w-92 h-105 rounded-2xl md:mb-0 mb-5 cursor-pointer">
                   <SkeletonTheme
                     baseColor="gray"
                     borderRadius={16}
@@ -180,7 +185,7 @@ const MovieList = ({ type }: MovieListProps) => {
             total={data.totalPages}
             value={currentPage}
             onChange={setCurrentPage}
-            color="gray.8"
+            color="gray.7"
             radius="md"
             disabled={isFetching}
           />

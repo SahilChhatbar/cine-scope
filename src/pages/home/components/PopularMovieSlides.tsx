@@ -8,7 +8,7 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { fetchMoviesByType } from "../../../utils/fetchMovies";
 import { FaStar } from "react-icons/fa";
-import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import { IoArrowForwardSharp, IoArrowBackSharp } from "react-icons/io5";
 
 const PopularMovieSlides = () => {
   const autoplay = useRef(Autoplay({ delay: 6000 }));
@@ -46,8 +46,8 @@ const PopularMovieSlides = () => {
       height={600}
       plugins={[autoplay.current]}
       loop={true}
-      nextControlIcon={<MdArrowForward size={30} />}
-      previousControlIcon={<MdArrowBack size={30} />}
+      nextControlIcon={<IoArrowForwardSharp size={32} />}
+      previousControlIcon={<IoArrowBackSharp size={32} />}
       w="100%"
       className="md:mt-0 mt-18"
     >

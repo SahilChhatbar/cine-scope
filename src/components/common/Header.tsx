@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
-import { Autocomplete, Burger, Flex, Group, Stack } from "@mantine/core";
+import {
+  Autocomplete,
+  Burger,
+  Flex,
+  Group,
+  Stack,
+  Button,
+  Divider,
+} from "@mantine/core";
+import { Spotlight, SpotlightActionData, spotlight } from "@mantine/spotlight";
 import { MdSearch } from "react-icons/md";
 import { BiCameraMovie } from "react-icons/bi";
 import { useDisclosure } from "@mantine/hooks";
@@ -8,13 +17,7 @@ import { HeaderProps, NavLinkItem, Movie } from "../../types/types";
 import { useQuery } from "@tanstack/react-query";
 import { tmdbApi } from "../../api/tmdb";
 import { useDebouncedValue } from "@mantine/hooks";
-
-const links: NavLinkItem[] = [
-  { link: "/popular", label: "Popular" },
-  { link: "/upcoming", label: "Upcoming" },
-  { link: "/toprated", label: "Top Rated" },
-  { link: "/now_playing", label: "Now Playing" },
-];
+import { links } from "../../constants";
 
 const Header: React.FC<HeaderProps> = () => {
   const [opened, { toggle }] = useDisclosure(false);
@@ -37,13 +40,23 @@ const Header: React.FC<HeaderProps> = () => {
       }`}
       className={({ isActive }: { isActive: boolean }) =>
         isActive
-          ? "block leading-none py-2 px-5 transition-all duration-250 text-white hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-xl"
-          : "block leading-none py-2 px-5 transition-all duration-250 text-gray-500 hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium text-xl"
+          ? "flex items-center gap-2 py-2 px-5 transition-all duration-250 text-white hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium lg:text-xl"
+          : "flex items-center gap-2 py-2 px-5 transition-all duration-250 text-gray-500 hover:drop-shadow-[0_0_0.5em_#61dafbaa] font-medium lg:text-xl"
       }
     >
       {link.label}
     </NavLink>
   ));
+
+  const navigationActions: SpotlightActionData[] = links.map((link) => ({
+    id: link.label.toLowerCase().replace(" ", "_"),
+    label: link.label,
+    description: link.description,
+    onClick: () => navigate(link.link),
+  }));
+
+
+  const allActions = [...navigationActions];
 
   const handleSearchSelect = (movieId: string) => {
     navigate(`/movie/${movieId}`);
@@ -57,7 +70,7 @@ const Header: React.FC<HeaderProps> = () => {
             opened={opened}
             onClick={toggle}
             size="sm"
-            hiddenFrom="md"
+            hiddenFrom="lg"
             color="white"
             className="text-gray-200"
           />
@@ -69,16 +82,63 @@ const Header: React.FC<HeaderProps> = () => {
           </NavLink>
         </Group>
         <Group align="center">
-          <Group gap={5} visibleFrom="md">
+          <Group gap={5} visibleFrom="lg">
             {items}
           </Group>
+          <div className="hidden sm:flex">
+            <Button color="#1e293b" onClick={spotlight.open} radius={10}>
+              Find
+              <Divider orientation="vertical" mx={8} my={8} />
+              <Group gap={8}>
+                <span className="border p-1 rounded-[.3rem] font-mono">CTRL</span>
+                <span className="border p-1 rounded-[.3rem] font-mono">K</span>
+              </Group>
+            </Button>
+            <Spotlight
+              actions={allActions}
+              nothingFound="Nothing found..."
+              highlightQuery
+              searchProps={{
+                leftSection: <MdSearch size={20} />,
+                placeholder: "Take me to...",
+              }}
+              styles={{
+                content: {
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: "1rem",
+                  backgroundColor: "#1e293b",
+                },
+                action: {
+                  width: "100%",
+                  color: "white",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  padding: "0.5rem",
+                },
+                actionLabel: {
+                  fontSize: "1.25rem",
+                  fontWeight: "bold",
+                  display: "block",
+                },
+                actionDescription: {
+                  fontSize: "1rem",
+                  color: "#94a3b8",
+                  display: "block",
+                  width: "100%",
+                  fontStyle:"italic"
+                }
+              }}
+            />
+          </div>
           <Autocomplete
             radius={10}
             placeholder="Search movies..."
             value={searchValue}
             aria-label="input"
             rightSection={<MdSearch size={20} color="white" />}
-            className="md:w-54 w-40"
+            className="md:w-38 w-40"
             styles={{
               input: {
                 backgroundColor: "#1e293b",
@@ -98,15 +158,15 @@ const Header: React.FC<HeaderProps> = () => {
         </Group>
       </Flex>
       {opened && (
-        <Stack className="sm:hidden px-2 pt-2 pb-3 border-t border-gray-200 bg-white">
+        <Stack className="xl:hidden px-2 pt-2 pb-3 border-t border-gray-200 bg-slate-900">
           {links.map((link: NavLinkItem) => (
             <NavLink
               key={link.label}
               to={link.link}
               className={({ isActive }: { isActive: boolean }) =>
                 isActive
-                  ? "block py-2 px-3 rounded text-slate-900 font-medium text-sm bg-gray-100"
-                  : "block py-2 px-3 rounded text-gray-700 font-medium text-sm hover:bg-gray-100"
+                  ? "block py-2 px-3 rounded text-white font-medium text-sm bg-slate-800"
+                  : "block py-2 px-3 rounded text-gray-300 font-medium text-sm hover:bg-slate-800"
               }
               onClick={() => opened && toggle()}
             >

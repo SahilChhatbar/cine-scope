@@ -6,6 +6,7 @@ export interface MovieCardProps {
 export interface NavLinkItem {
   link: string;
   label: string;
+  description:string;
 }
 
 export interface HeaderProps {
