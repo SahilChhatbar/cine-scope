@@ -18,7 +18,7 @@ import {
 import { tmdbApi } from "../../api/tmdb";
 import { useEffect, useState } from "react";
 import MovieCard from "../common/MovieCard";
-import { Star, ExternalLink } from "lucide-react";
+import { FaStar, FaExternalLinkAlt } from "react-icons/fa";
 import { youtubeUrl } from "../../constants";
 
 const MovieDetail = () => {
@@ -105,7 +105,7 @@ const MovieDetail = () => {
                   <Title>{data?.Title}</Title>
                   <Group>
                     <Group>
-                      <Star
+                      <FaStar
                         size={20}
                         className="text-yellow-400 fill-yellow-400"
                       />
@@ -162,7 +162,7 @@ const MovieDetail = () => {
                 className="rounded-full"
               >
                 <span className="flex flex-row pt-2 p-2 gap-2">
-                  Home Page <ExternalLink size={20} />
+                  Home Page <FaExternalLinkAlt size={20} />
                 </span>
               </Anchor>
             )}
@@ -176,7 +176,7 @@ const MovieDetail = () => {
               className="rounded-full "
             >
               <span className="flex flex-row pt-2 p-2 gap-2">
-                IMDb <ExternalLink size={20} />
+                IMDb <FaExternalLinkAlt size={20} />
               </span>
             </Anchor>
           </Flex>

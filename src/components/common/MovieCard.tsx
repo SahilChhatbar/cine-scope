@@ -3,7 +3,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { Image, Text, Group, Title } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { MovieCardProps } from "../../types/types";
-import { Star } from "lucide-react";
+import { FaStar } from "react-icons/fa";
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   return (
@@ -24,7 +24,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
                 {movie?.Year}
               </Text>
               <Group gap="xs" justify="center" align="center">
-                <Star size={20} className="text-yellow-400 fill-yellow-400" />
+                <FaStar size={20} className="text-yellow-400 fill-yellow-400" />
                 <Text fw={600} c="yellow.4" className="text-[0.75rem]">
                   {movie?.imdbRating || "N/A"}
                 </Text>
