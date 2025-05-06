@@ -9,7 +9,7 @@ import {
   Group,
   Pagination,
 } from "@mantine/core";
-import { FaHotjar } from "react-icons/fa";
+import { FaHotjar, FaRegCalendarPlus } from "react-icons/fa";
 import { fetchMoviesByType } from "../../utils/fetchMovies";
 import MovieCard from "./MovieCard";
 import {
@@ -24,7 +24,6 @@ import {
   MdSort,
   MdStars,
   MdTrendingUp,
-  MdUpcoming,
 } from "react-icons/md";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -46,7 +45,7 @@ const MovieList = ({ type }: MovieListProps) => {
     ) : type === "top_rated" ? (
       <MdStars size={34} className="md:block hidden" />
     ) : type === "upcoming" ? (
-      <MdUpcoming size={36} className="md:block hidden" />
+      <FaRegCalendarPlus size={30} className="md:block hidden" />
     ) : type === "hot_right_now" ? (
       <FaHotjar size={36} className="md:block hidden" />
     ) : (
