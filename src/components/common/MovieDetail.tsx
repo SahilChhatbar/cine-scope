@@ -20,8 +20,9 @@ import { useEffect, useState } from "react";
 import MovieCard from "../common/MovieCard";
 import { FaStar, FaExternalLinkAlt } from "react-icons/fa";
 import { youtubeUrl } from "../../constants";
+import { VideoResult } from "../../types/types";
 
-const MovieDetail = () => {
+const MovieDetail: React.FC<VideoResult> = () => {
   const { movieId } = useParams<{ movieId: string }>();
   const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
 
@@ -40,12 +41,12 @@ const MovieDetail = () => {
   useEffect(() => {
     if (videosData?.results?.length > 0) {
       const trailer = videosData.results.find(
-        (video: any) =>
+        (video:VideoResult) =>
           video.type === "Trailer" && video.site === "YouTube" && video.official
       );
 
       const fallbackTrailer = videosData.results.find(
-        (video: any) => video.type === "Trailer" && video.site === "YouTube"
+        (video:VideoResult) => video.type === "Trailer" && video.site === "YouTube"
       );
 
       if (trailer || fallbackTrailer) {
@@ -188,7 +189,7 @@ const MovieDetail = () => {
               <Flex gap="md" py={20} pb={0}>
                 {data?.Production.split(", ").map((company: string) => (
                   <List key={company} className="rounded-md">
-                    <Badge p="md" bg="indigo.9" >
+                    <Badge p="md" bg="indigo.9">
                       {company}
                     </Badge>
                   </List>

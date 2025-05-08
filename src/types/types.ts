@@ -12,6 +12,7 @@ export interface NavLinkItem {
 export interface HeaderProps {
   logoColor?: MantineColor;
 }
+
 export interface SortOption {
   id: string;
   label: string;
@@ -20,6 +21,7 @@ export interface SortOption {
 
 export interface MovieListProps {
   type: 'popular' | 'top_rated' | 'upcoming' | 'now_playing' | 'hot_right_now';
+  genreId?: number;
 }
 
 export interface Movie {
@@ -81,21 +83,39 @@ export interface Review {
   rating?: number;
 }
 
-export interface SortOption {
-  id: string;
-  label: string;
-  compareFn: (a: Movie, b: Movie) => number;
-}
-
 export interface MovieListResponse {
   movies: Movie[];
   totalResults: number;
   page: number;
   totalPages: number;
 }
+
 export interface MovieData {
   movies: Movie[];
   totalPages: number;
 }
 
 export type MovieListType = 'popular' | 'top_rated' | 'upcoming' | 'now_playing' | 'hot_right_now';
+
+export interface VideoResult {
+  type?: string;
+  site?: string;
+  key?: string;
+  official?: boolean;
+}
+export interface TmdbMovie {
+  id?: number;
+  title?: string;
+  release_date?: string;
+  poster_path?: string;
+  backdrop_path?: string;
+  overview?: string;
+  vote_average?: number;
+} 
+
+export interface TmdbApiResponse {
+  results: TmdbMovie[];
+  total_results: number;
+  total_pages: number;
+  page: number;
+}

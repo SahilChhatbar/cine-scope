@@ -3,12 +3,15 @@ import { tmdbApi } from '../api/tmdb';
 
 export const fetchMoviesByType = async (
   type: MovieListType, 
-  page: number = 1
+  page: number = 1,
+  genreId?: number,
 ): Promise<MovieListResponse> => {
   try {
     switch (type) {
       case 'popular':
-        return tmdbApi.getPopularMovies(page);
+        return genreId 
+          ? tmdbApi.getMoviesByGenre(genreId, page)
+          : tmdbApi.getPopularMovies(page);
       case 'top_rated':
         return tmdbApi.getTopRatedMovies(page);
       case 'upcoming':

@@ -2,10 +2,12 @@ import { AppShell } from "@mantine/core";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
+import { useScrollToTop } from "../utils/scrollToTop";
 
 const Appshell = () => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  useScrollToTop(location.pathname);
 
   return (
     <AppShell

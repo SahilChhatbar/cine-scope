@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { popularGenres } from "../../constants";
 import {
   Autocomplete,
   Burger,
@@ -55,8 +56,14 @@ const Header: React.FC<HeaderProps> = () => {
     onClick: () => navigate(link.link),
   }));
 
+  const genreActions: SpotlightActionData[] = popularGenres.map((genre) => ({
+    id: `genre_${genre.id}`,
+    label: `${genre.name} Movies`,
+    description: `Discover the most popular ${genre.name.toLowerCase()} movies`,
+    onClick: () => navigate(`/popular?genre=${genre.id}`),
+  }));
 
-  const allActions = [...navigationActions];
+  const allActions = [...navigationActions, ...genreActions];
 
   const handleSearchSelect = (movieId: string) => {
     navigate(`/movie/${movieId}`);
@@ -90,7 +97,9 @@ const Header: React.FC<HeaderProps> = () => {
               Find
               <Divider orientation="vertical" mx={8} my={8} />
               <Group gap={8}>
-                <span className="border p-1 rounded-[.3rem] font-mono">CTRL</span>
+                <span className="border p-1 rounded-[.3rem] font-mono">
+                  CTRL
+                </span>
                 <span className="border p-1 rounded-[.3rem] font-mono">K</span>
               </Group>
             </Button>
@@ -116,6 +125,7 @@ const Header: React.FC<HeaderProps> = () => {
                   flexDirection: "column",
                   alignItems: "flex-start",
                   padding: "0.5rem",
+                  borderBottom: "2px solid #94a3b8",
                 },
                 actionLabel: {
                   fontSize: "1.25rem",
@@ -127,8 +137,8 @@ const Header: React.FC<HeaderProps> = () => {
                   color: "#94a3b8",
                   display: "block",
                   width: "100%",
-                  fontStyle:"italic"
-                }
+                  fontStyle: "italic",
+                },
               }}
             />
           </div>

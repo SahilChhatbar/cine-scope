@@ -19,24 +19,19 @@ import {
   MovieData,
 } from "../../types/types";
 import { useState, useMemo } from "react";
-import {
-  MdLiveTv,
-  MdSort,
-  MdStars,
-  MdTrendingUp,
-} from "react-icons/md";
+import { MdLiveTv, MdSort, MdStars, MdTrendingUp } from "react-icons/md";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { AnimatePresence, motion } from "framer-motion";
 import { container, item, transitionSettings } from "../../constants";
 
-const MovieList = ({ type }: MovieListProps) => {
+const MovieList = ({ type, genreId }: MovieListProps) => {
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, isLoading, isFetching } = useQuery<MovieData>({
-    queryKey: ["movies", type, currentPage],
-    queryFn: () => fetchMoviesByType(type, currentPage),
+    queryKey: ["movies", type, currentPage, genreId],
+    queryFn: () => fetchMoviesByType(type, currentPage, genreId),
   });
 
   const emoji =

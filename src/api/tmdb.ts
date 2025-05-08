@@ -1,33 +1,78 @@
 import axios from 'axios';
-import { Movie, MovieDetails, MovieListResponse } from '../types/types';
+import { Movie, MovieDetails, MovieListResponse, TmdbMovie } from '../types/types';
 
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const TMDB_BACKDROP_BASE_URL = 'https://image.tmdb.org/t/p/original';
-const MAX_PAGES = 500; 
+const MAX_PAGES = 500;
 
-const transformMovieData = (tmdbMovie: any): Movie => ({
-  imdbID: tmdbMovie.id.toString(),
-  Title: tmdbMovie.title,
-  Year: new Date(tmdbMovie.release_date).getFullYear().toString(),
-  Poster: tmdbMovie.poster_path ? `${TMDB_IMAGE_BASE_URL}${tmdbMovie.poster_path}` : '',
-  Backdrop: tmdbMovie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${tmdbMovie.backdrop_path}` : '',
-  Plot: tmdbMovie.overview || '',
-  imdbRating: tmdbMovie.vote_average ? tmdbMovie.vote_average.toFixed(1) : 'N/A'
+const DEFAULT_MOVIE_RESPONSE: MovieListResponse = {
+  movies: [],
+  totalResults: 0,
+  page: 1,
+  totalPages: 0,
+};
+
+const DEFAULT_MOVIE_DETAILS: MovieDetails = {
+  imdbID: '',
+  Title: 'Movie Not Found',
+  Year: 'N/A',
+  Runtime: 'N/A',
+  Genre: 'N/A',
+  Plot: 'Movie details are not available.',
+  Poster: 'no poster',
+  Backdrop: 'No image',
+  Website: 'N/A',
+  imdbRating: 'N/A',
+  imdbVotes: '0',
+  Reviews: [],
+  Production: 'N/A',
+  Cast: [],
+  Crew: [],
+  Similar: [],
+};
+
+const transformMovieData = (tmdbMovie: TmdbMovie): Movie => ({
+  imdbID: tmdbMovie?.id?.toString() || '',
+  Title: tmdbMovie?.title || 'Unknown Title',
+  Year: tmdbMovie?.release_date 
+    ? new Date(tmdbMovie.release_date).getFullYear().toString() 
+    : 'N/A',
+  Poster: tmdbMovie?.poster_path 
+    ? `${TMDB_IMAGE_BASE_URL}${tmdbMovie.poster_path}` 
+    : 'no poster',
+  Backdrop: tmdbMovie?.backdrop_path 
+    ? `${TMDB_BACKDROP_BASE_URL}${tmdbMovie.backdrop_path}` 
+    : 'no poster',
+  Plot: tmdbMovie?.overview || 'No plot available',
+  imdbRating: tmdbMovie?.vote_average 
+    ? tmdbMovie.vote_average.toFixed(1) 
+    : 'N/A'
 });
 
-const handleApiResponse = (response: any): MovieListResponse => ({
-  movies: response.results.map(transformMovieData),
-  totalResults: response.total_results,
-  page: response.page,
-  totalPages: Math.min(response.total_pages, MAX_PAGES),
-});
+const handleApiResponse = (response: any): MovieListResponse => {
+  if (!response || !Array.isArray(response.results)) {
+    return DEFAULT_MOVIE_RESPONSE;
+  }
+
+  
+
+  return {
+    movies: response.results.map((movie: TmdbMovie) => 
+      movie ? transformMovieData(movie) : null).filter(Boolean),
+    totalResults: response.total_results || 0,
+    page: response.page || 1,
+    totalPages: Math.min(response.total_pages || 1, MAX_PAGES),
+  } as MovieListResponse;
+};
 
 export const tmdbApi = {
   getMovieDetails: async (movieId: string): Promise<MovieDetails> => {
+    if (!movieId) return DEFAULT_MOVIE_DETAILS;
+
     try {
-      const [movieResponse, similarResponse, reviewsResponse] = await Promise.all([
+      const [movieResponse, similarResponse, reviewsResponse] = await Promise.allSettled([
         axios.get(`${TMDB_BASE_URL}/movie/${movieId}`, {
           params: {
             api_key: TMDB_API_KEY,
@@ -46,53 +91,69 @@ export const tmdbApi = {
         }),
       ]);
 
-      const movie = movieResponse.data;
-      const similarMovies = similarResponse.data.results.slice(0, 5).map(transformMovieData);
-      const reviews = reviewsResponse.data.results.slice(0, 10).map((review: any) => ({
-        id: review.id,
-        author: review.author,
-        content: review.content,
-        created_at: review.created_at,
-        rating: review.author_details?.rating || null,
-      }));
+      const movie = movieResponse.status === 'fulfilled' ? movieResponse.value.data : null;
+      const similarMovies = similarResponse.status === 'fulfilled' 
+        ? similarResponse.value.data.results.slice(0, 5).map(transformMovieData)
+        : [];
+      const reviews = reviewsResponse.status === 'fulfilled'
+        ? reviewsResponse.value.data.results.slice(0, 10).map((review: any) => ({
+            id: review?.id || '',
+            author: review?.author || 'Anonymous',
+            content: review?.content || 'No content',
+            created_at: review?.created_at || new Date().toISOString(),
+            rating: review?.author_details?.rating || null,
+          }))
+        : [];
+
+      if (!movie) return DEFAULT_MOVIE_DETAILS;
 
       return {
-        imdbID: movie.id.toString(),
-        Title: movie.title,
-        Year: new Date(movie.release_date).getFullYear().toString(),
-        Runtime: `${movie.runtime} min`,
-        Genre: movie.genres.map((g: any) => g.name).join(', '),
-        Plot: movie.overview,
-        Poster: movie.poster_path ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}` : '',
-        Backdrop: movie.backdrop_path ? `${TMDB_BACKDROP_BASE_URL}${movie.backdrop_path}` : '',
+        imdbID: movie.id?.toString() || '',
+        Title: movie.title || 'Unknown Title',
+        Year: movie.release_date 
+          ? new Date(movie.release_date).getFullYear().toString() 
+          : 'N/A',
+        Runtime: movie.runtime ? `${movie.runtime} min` : 'N/A',
+        Genre: movie.genres?.length 
+          ? movie.genres.map((g: any) => g.name).join(', ') 
+          : 'N/A',
+        Plot: movie.overview || 'No plot available',
+        Poster: movie.poster_path 
+          ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}` 
+          : 'no poster',
+        Backdrop: movie.backdrop_path 
+          ? `${TMDB_BACKDROP_BASE_URL}${movie.backdrop_path}` 
+          : 'No image',
         Website: movie.homepage || 'N/A',
-        imdbRating: (movie.vote_average / 2).toFixed(1),
-        imdbVotes: movie.vote_count.toLocaleString(),
+        imdbRating: movie.vote_average ? (movie.vote_average / 2).toFixed(1) : 'N/A',
+        imdbVotes: movie.vote_count?.toLocaleString() || '0',
         Reviews: reviews,
-        Production: movie.production_companies.map((company: any) => company.name).join(', '),
-        Cast: movie.credits.cast.slice(0, 10).map((cast: any) => ({
-          id: cast.id,
-          name: cast.name,
-          character: cast.character,
+        Production: movie.production_companies?.length 
+          ? movie.production_companies.map((company: any) => company.name).join(', ') 
+          : 'N/A',
+        Cast: (movie.credits?.cast || []).slice(0, 10).map((cast: any) => ({
+          id: cast?.id || '',
+          name: cast?.name || 'Unknown',
+          character: cast?.character || 'Unknown Role',
         })),
-        Crew: movie.credits.crew
-          .filter((crew: any) => ['Director', 'Writer', 'Producer'].includes(crew.job))
+        Crew: (movie.credits?.crew || [])
+          .filter((crew: any) => ['Director', 'Writer', 'Producer'].includes(crew?.job))
           .slice(0, 10)
           .map((crew: any) => ({
-            id: crew.id,
-            name: crew.name,
-            job: crew.job,
+            id: crew?.id || '',
+            name: crew?.name || 'Unknown Role',
+            job: crew?.job || 'Unknown Role',
           })),
         Similar: similarMovies,
       };
     } catch (error) {
       console.error('Error fetching movie details:', error);
-      throw error;
+      return DEFAULT_MOVIE_DETAILS;
     }
   },
 
   searchMovies: async (query: string, page: number = 1): Promise<MovieListResponse> => {
-    if (!query) return { movies: [], totalResults: 0, page: 1, totalPages: 0 };
+    if (!query) return DEFAULT_MOVIE_RESPONSE;
     
     try {
       const response = await axios.get(`${TMDB_BASE_URL}/search/movie`, {
@@ -106,7 +167,7 @@ export const tmdbApi = {
       return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error searching movies:', error);
-      throw error;
+      return DEFAULT_MOVIE_RESPONSE;
     }
   },
 
@@ -115,10 +176,10 @@ export const tmdbApi = {
       const response = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}/videos`, {
         params: { api_key: TMDB_API_KEY }
       });
-      return response.data;
+      return response.data?.results || [];
     } catch (error) {
       console.error('Error fetching movie videos:', error);
-      throw error;
+      return [];
     }
   },
 
@@ -134,7 +195,7 @@ export const tmdbApi = {
       return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error fetching popular movies:', error);
-      throw error;
+      return DEFAULT_MOVIE_RESPONSE;
     }
   },
 
@@ -150,7 +211,7 @@ export const tmdbApi = {
       return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error fetching top rated movies:', error);
-      throw error;
+      return DEFAULT_MOVIE_RESPONSE;
     }
   },
 
@@ -166,7 +227,7 @@ export const tmdbApi = {
       return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error fetching upcoming movies:', error);
-      throw error;
+      return DEFAULT_MOVIE_RESPONSE;
     }
   },
 
@@ -183,7 +244,25 @@ export const tmdbApi = {
       return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error fetching now playing movies:', error);
-      throw error;
+      return DEFAULT_MOVIE_RESPONSE;
+    }
+  },
+  
+  getMoviesByGenre: async (genreId: number, page: number = 1): Promise<MovieListResponse> => {
+    try {
+      const response = await axios.get(`${TMDB_BASE_URL}/discover/movie`, {
+        params: {
+          api_key: TMDB_API_KEY,
+          with_genres: genreId,
+          sort_by: 'popularity.desc',
+          page,
+        }
+      });
+  
+      return handleApiResponse(response.data);
+    } catch (error) {
+      console.error('Error fetching movies by genre:', error);
+      return DEFAULT_MOVIE_RESPONSE;
     }
   },
 
@@ -203,7 +282,7 @@ export const tmdbApi = {
       return handleApiResponse(response.data);
     } catch (error) {
       console.error('Error fetching hot right now movies:', error);
-      throw error;
+      return DEFAULT_MOVIE_RESPONSE;
     }
   },
 };
