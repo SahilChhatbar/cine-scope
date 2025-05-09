@@ -2,7 +2,7 @@
 
 
 @layer utilities {
-  @media (min-width: 1024px) and (max-width: 1286px) {
+  @media (min-width: 1024px) and (max-width: 1380px) {
     .xm\:grid-cols-4 {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }

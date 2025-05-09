@@ -25,14 +25,14 @@ const PopularMovieSlides = () => {
   if (isLoading) {
     return (
       <Center>
-        <div className="w-full max-w-320">
+        <div className="w-full max-w-350 ">
           <SkeletonTheme
             baseColor="gray"
             borderRadius={24}
             highlightColor="#444"
           >
             <Center>
-              <Skeleton height={600} width={1280} duration={2} />
+              <Skeleton height={600} width={1400} duration={2} />
             </Center>
           </SkeletonTheme>
         </div>
