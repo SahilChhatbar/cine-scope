@@ -36,13 +36,13 @@ const MovieList = ({ type, genreId }: MovieListProps) => {
 
   const emoji =
     type === "popular" ? (
-      <MdTrendingUp size={36} className="md:block hidden" />
+      <MdTrendingUp size={36} />
     ) : type === "top_rated" ? (
-      <MdStars size={34} className="md:block hidden" />
+      <MdStars size={34} />
     ) : type === "upcoming" ? (
-      <FaRegCalendarPlus size={30} className="md:block hidden" />
+      <FaRegCalendarPlus size={30} />
     ) : type === "hot_right_now" ? (
-      <FaHotjar size={36} className="md:block hidden" />
+      <FaHotjar size={36} />
     ) : (
       <MdLiveTv size={36} />
     );
