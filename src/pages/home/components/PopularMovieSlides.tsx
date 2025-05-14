@@ -49,8 +49,8 @@ const PopularMovieSlides = () => {
       height={600}
       plugins={[autoplay.current]}
       loop={true}
-      nextControlIcon={<TiArrowForward size={32} />}
-      previousControlIcon={<TiArrowBack size={32} />}
+      nextControlIcon={<TiArrowForward size={32} color="#191a1b"/>}
+      previousControlIcon={<TiArrowBack size={32} color="#191a1b"/>}
       w="100%"
       className="md:mt-0 mt-18"
       onSlideChange={(index) => setCurrentSlide(index)}
